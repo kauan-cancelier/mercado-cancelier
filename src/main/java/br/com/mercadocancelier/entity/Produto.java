@@ -29,7 +29,7 @@ public class Produto implements Validavel {
 	
 	@Column(name = "codigo")
 	@NotNull(message =  "O código é obrigatório. ")
-	private Integer codigo;
+	private String codigo;
 	
 	@Column(name = "nome")
 	@NotBlank(message = "O nome do produto é obrigatório. ")

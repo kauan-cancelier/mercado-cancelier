@@ -10,6 +10,7 @@ import com.google.common.base.Preconditions;
 import br.com.mercadocancelier.entity.Produto;
 import br.com.mercadocancelier.repository.ProdutosRepository;
 import br.com.mercadocancelier.service.ProdutoService;
+import jakarta.transaction.Transactional;
 
 @Service
 public class ProdutoServiceImpl implements ProdutoService {
@@ -22,9 +23,31 @@ public class ProdutoServiceImpl implements ProdutoService {
 	}
 
 	@Override
+	public List<Produto> listarPor(String nome) {
+		Preconditions.checkNotNull(nome, "O nome do produto é obrigatório para listagem. ");
+		return produtosRepository.listarPor(nome + "%");
+	}
+
+	@Override
 	public void salvar(Produto produto) {
 		Preconditions.checkNotNull(produto, "O produto é obrigatório");
+		if (produto.getId() != null && produto.getId() > 0) {
+			produtosRepository.atualizarProduto(
+					produto.getId(),
+					produto.getCodigo(),
+					produto.getNome(),
+					produto.getPreco(),
+					produto.getEstoque());
+		}
 		produtosRepository.save(produto);
 	}
+
+	@Transactional
+	@Override
+	public void excluirPor(Integer id) {
+		Preconditions.checkNotNull(id, "O produto é obrigatório");
+		produtosRepository.excluirPor(id);
+	}
+
 	
 }

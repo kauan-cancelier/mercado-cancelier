@@ -57,7 +57,7 @@ private static final long serialVersionUID = 1L;
 	@Override
 	public Object getValueAt(int rowIndex, int columnIndex) {
 		if (columnIndex == 0) {
-			return produtos.get(rowIndex).getId();
+			return produtos.get(rowIndex).getCodigo();
 		} else if (columnIndex == 1) {
 			return produtos.get(rowIndex).getNome();
 		} else if (columnIndex == 2) {

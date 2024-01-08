@@ -51,7 +51,9 @@ public class TelaPrincipal extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				updateHourLabel();
-				setJMenuBar(menuBar);
+				if (contentPane.isFocusable()) {					
+					setJMenuBar(menuBar);
+				}
 			}
 		});
 

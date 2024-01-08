@@ -53,6 +53,7 @@ public class MenuBar extends JMenuBar {
     		JMenu menuVenda,
     		JMenu menuMercado
     		) {
+    	
     	menuBar = new JMenuBar();
 		menuBar.setMargin(new Insets(0, 10, 0, 10));
 		menuBar.setFont(new Font("Segoe UI", Font.PLAIN, 17));
