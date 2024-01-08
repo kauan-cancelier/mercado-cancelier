@@ -18,13 +18,17 @@ import lombok.EqualsAndHashCode;
 @Table(name = "produtos")
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Data
-public class Produto {
+	public class Produto {
 	
 	@Id
 	@Column(name = "id")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@EqualsAndHashCode.Include
 	private Integer id;
+	
+	@Column(name = "codigo")
+	@NotNull(message =  "O código é obrigatório. ")
+	private Integer codigo;
 	
 	@Column(name = "nome")
 	@NotBlank(message = "O nome do produto é obrigatório. ")
