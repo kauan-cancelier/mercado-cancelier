@@ -8,6 +8,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -18,7 +19,7 @@ import lombok.EqualsAndHashCode;
 @Table(name = "produtos")
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Data
-	public class Produto {
+public class Produto implements Validavel {
 	
 	@Id
 	@Column(name = "id")
@@ -42,9 +43,12 @@ import lombok.EqualsAndHashCode;
 	@Column(name = "estoque")
 	@NotNull(message = "O estoque do produto é obrigatório. ")
 	private Integer estoque;
-	
+
+	@Transient
+	@Override
 	public boolean isPersistido() {
 		return getId() != null && getId() > 0;
 	}
+	
 
 }

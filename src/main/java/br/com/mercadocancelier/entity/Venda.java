@@ -21,7 +21,7 @@ import lombok.EqualsAndHashCode;
 @Table(name = "vendas")
 @Data
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
-public class Venda {
+public class Venda implements Validavel  {
 	
 	@Id
 	@Column(name = "id")
@@ -47,6 +47,7 @@ public class Venda {
 	}
 	
 	@Transient
+	@Override
 	public boolean isPersistido() {
 		return getId() != null && getId() > 0;
 	}
