@@ -72,6 +72,12 @@ public class MenuBar extends JMenuBar {
 		menuCadastros.add(menuItemProdutos);
 		
 		menuItemFornecedor = new JMenuItem("Fornecedor");
+		menuItemFornecedor.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+            	TelaConsultaDeFornecedor view = new TelaConsultaDeFornecedor();
+            	view.setVisible(true);
+            }
+        });
 		menuCadastros.add(menuItemFornecedor);
 		
 		menuMovimentacao = new JMenu("Movimentação");
