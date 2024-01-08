@@ -12,8 +12,14 @@ public interface ProdutoService {
 	
 	public List<Produto> listarTodos();
 	
+	public List<Produto> listarPor(String nome);
+	
 	public void salvar(
 			@NotNull(message = "O produto é obrigatório. ")
 			Produto produto);
+	
+	public void excluirPor(
+			@NotNull(message = "O Id é obrigatório para remoção. ")
+			Integer id);
 	
 }
