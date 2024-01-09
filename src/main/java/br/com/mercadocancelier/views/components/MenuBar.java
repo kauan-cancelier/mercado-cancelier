@@ -15,7 +15,9 @@ import org.hibernate.validator.internal.util.stereotypes.Lazy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import br.com.mercadocancelier.views.fornecedor.TelaConsultaDeFornecedor;
 import br.com.mercadocancelier.views.produtos.TelaConsultaDeProdutos;
+import br.com.mercadocancelier.views.vendas.TelaDeVenda;
 
 @Component
 public class MenuBar extends JMenuBar {
@@ -25,6 +27,10 @@ public class MenuBar extends JMenuBar {
     @Autowired
     @Lazy
     private TelaConsultaDeProdutos telaConsultaDeProdutos;
+    
+    @Autowired
+    @Lazy
+    private TelaDeVenda telaDeVenda;
 
     public MenuBar() {
         createMenus(
@@ -37,7 +43,8 @@ public class MenuBar extends JMenuBar {
         		new JMenuItem(),
         		new JMenu(),
         		new JMenu(),
-        		new JMenu()
+        		new JMenu(),
+        		new JMenuItem()
         		);
     }
 
@@ -51,7 +58,8 @@ public class MenuBar extends JMenuBar {
     		JMenuItem menuItemSaidas,
     		JMenu menuEstoque,
     		JMenu menuVenda,
-    		JMenu menuMercado
+    		JMenu menuMercado,
+    		JMenuItem menuItemVenda
     		) {
     	
     	menuBar = new JMenuBar();
@@ -97,6 +105,13 @@ public class MenuBar extends JMenuBar {
 		
 		menuVenda = new JMenu("Venda");
 		menuVenda.setFont(new Font("Segoe UI", Font.PLAIN, 30));
+		menuItemVenda = new JMenuItem("Vender");
+		menuVenda.add(menuItemVenda);
+		menuItemVenda.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+            	telaDeVenda.setVisible(true);
+            }
+        });
 		menuBar.add(menuVenda);
 		
 		menuMercado = new JMenu("Mercado");

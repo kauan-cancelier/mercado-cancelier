@@ -24,8 +24,16 @@ public interface ProdutosRepository extends JpaRepository<Produto, Integer> {
 			+ "FROM Produto p")
 	public List<Produto> listarTodos();
 	
-	@Query("SELECT p FROM Produto p WHERE UPPER(p.nome) LIKE UPPER(:nome)")
+	@Query("SELECT p"
+			+ " FROM Produto p"
+			+ " WHERE UPPER(p.nome)"
+			+ " LIKE UPPER(:nome)")
 	public List<Produto> listarPor(@Param("nome") String nome);
+	
+	@Query("SELECT p"
+			+ " FROM Produto p"
+			+ " WHERE p.codigo = :codigo")
+	public Produto buscarPor(@Param("codigo") String codigo);
 	
 	@Modifying
 	@Query("DELETE FROM Produto p WHERE p.id = :id")

@@ -14,6 +14,8 @@ public interface ProdutoService {
 	
 	public List<Produto> listarPor(String nome);
 	
+	public Produto buscarPor(String codigo);
+	
 	public void salvar(
 			@NotNull(message = "O produto é obrigatório. ")
 			Produto produto);

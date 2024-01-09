@@ -27,6 +27,12 @@ public class ProdutoServiceImpl implements ProdutoService {
 		Preconditions.checkNotNull(nome, "O nome do produto é obrigatório para listagem. ");
 		return produtosRepository.listarPor(nome + "%");
 	}
+	
+	@Override
+	public Produto buscarPor(String codigo) {
+		Preconditions.checkNotNull(codigo, "O codigo do produto é obrigatório para listagem. ");
+		return produtosRepository.buscarPor(codigo);
+	}
 
 	@Override
 	public void salvar(Produto produto) {
@@ -49,5 +55,4 @@ public class ProdutoServiceImpl implements ProdutoService {
 		produtosRepository.excluirPor(id);
 	}
 
-	
 }

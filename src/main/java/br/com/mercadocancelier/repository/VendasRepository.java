@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 import br.com.mercadocancelier.entity.Venda;
 
 @Repository
-public interface VendaRepository extends JpaRepository<Venda, Integer>{
+public interface VendasRepository extends JpaRepository<Venda, Integer>{
 	
 	@Query(value = "SELECT v "
 			+ "FROM Venda v "

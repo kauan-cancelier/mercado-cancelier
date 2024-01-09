@@ -12,7 +12,7 @@ import java.math.BigDecimal;
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.JButton;
-import javax.swing.JDialog;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -27,7 +27,7 @@ import br.com.mercadocancelier.entity.Produto;
 import br.com.mercadocancelier.service.ProdutoService;
 
 @Component
-public class TelaCadastroDeProdutos extends JDialog {
+public class TelaCadastroDeProdutos extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 
@@ -47,7 +47,7 @@ public class TelaCadastroDeProdutos extends JDialog {
 
 	private JTextField txtEstoqueInicial;
 	
-	Produto produto;
+	private Produto produto;
 
 	public void abrirTela() {
 		produto = null;

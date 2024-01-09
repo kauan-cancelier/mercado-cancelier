@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 import br.com.mercadocancelier.entity.enums.Status;
+import br.com.mercadocancelier.entity.enums.TipoDePagamento;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -41,6 +42,11 @@ public class Venda implements Validavel  {
 	@Enumerated(EnumType.STRING)
 	@NotNull(message = "O status para venda é obrigatório. ")
 	private Status status;
+	
+	@Column(name = "tipo_pagamento")
+	@Enumerated(EnumType.STRING)
+	@NotNull(message = "O tipo de pagamento para venda é obrigatório. ")
+	private TipoDePagamento tipoDePagamento;
 	
 	public Venda() {
 		this.status = Status.A;

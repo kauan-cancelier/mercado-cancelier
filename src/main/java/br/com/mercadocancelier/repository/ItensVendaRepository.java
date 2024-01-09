@@ -9,7 +9,7 @@ import org.springframework.data.repository.query.Param;
 import br.com.mercadocancelier.entity.ItemVenda;
 import br.com.mercadocancelier.entity.Venda;
 
-public interface ItemVendaRepository extends JpaRepository<ItemVenda, Integer> {
+public interface ItensVendaRepository extends JpaRepository<ItemVenda, Integer> {
 	
 	@Query(value = "SELECT iv "
 			+ "FROM ItemVenda iv "
@@ -19,5 +19,11 @@ public interface ItemVendaRepository extends JpaRepository<ItemVenda, Integer> {
 	 @Query(value = "SELECT iv "
 	 		+ "FROM ItemVenda iv "
 	 		+ "WHERE iv.venda = :venda")
-	 public List<ItemVenda> listarPor(@Param("venda")Venda venda);
+	 public List<ItemVenda> listarPor(@Param("venda") Venda venda);
+
+	 @Query(value = "DELETE "
+	 		+ "FROM ItemVenda iv "
+	 		+ "WHERE iv.id = :id ")
+	 public void removerPor(@Param("id") Integer id);
+
 }
