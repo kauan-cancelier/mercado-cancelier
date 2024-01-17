@@ -53,4 +53,11 @@ public class Fornecedor implements Validavel {
 		return getId() != null && getId() > 0;
 	}
 
+	@Override
+	public String toString() {
+		return nome;
+	}
+	
+	
+
 }

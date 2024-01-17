@@ -1,8 +1,9 @@
 package br.com.mercadocancelier.views.fornecedor;
 
-import java.awt.EventQueue;
+import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.text.ParseException;
 
 import javax.swing.JButton;
 import javax.swing.JFormattedTextField;
@@ -14,6 +15,7 @@ import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 import javax.swing.text.MaskFormatter;
 
+import org.hibernate.validator.internal.util.stereotypes.Lazy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -30,23 +32,13 @@ public class TelaCadastroDeFornecedor extends JFrame {
 	
 	@Autowired
 	private FornecedorService service;
+	
+	@Autowired @Lazy
+	private TelaConsultaDeFornecedor telaConsultaDeFornecedor;
 
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					TelaCadastroDeFornecedor frame = new TelaCadastroDeFornecedor();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
- 
 	public TelaCadastroDeFornecedor() {
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 476, 305);
+		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		setBounds(0, 0, 1366, 768);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 
@@ -60,29 +52,33 @@ public class TelaCadastroDeFornecedor extends JFrame {
 				try {
 					String nome = txtNome.getText();
 					String cnpj = txtCnpj.getText();
-					if (nome == null || cnpj == null) {
+					String cnpjNumerico = cnpj.replaceAll("\\D", "");
+					if (nome.isEmpty() || cnpjNumerico.isEmpty()) {
 						JOptionPane.showMessageDialog(contentPane, "Todos os campos são obrigatórios.");
 					} else {
-						cnpj = cnpj.replaceAll("\\D", "");
 						Fornecedor fornecedorNovo = new Fornecedor();
 						fornecedorNovo.setNome(nome.toUpperCase());
-						fornecedorNovo.setCnpj(cnpj);
-						JOptionPane.showMessageDialog(contentPane, "Fornecedor salvo com sucesso!");
+						fornecedorNovo.setCnpj(cnpjNumerico);
 						service.salvar(fornecedorNovo);
+						JOptionPane.showMessageDialog(contentPane, "Fornecedor salvo com sucesso!");
 					}
+					txtNome.setText(null);
+					txtCnpj.setText(null);
 				} catch (Exception ex) {
-					JOptionPane.showMessageDialog(contentPane, ex.getMessage());				}
+					JOptionPane.showMessageDialog(contentPane, ex.getMessage());				
+				}
 			}
 		});
-		btnSalvar.setBounds(335, 226, 117, 25);
+		btnSalvar.setBounds(1134, 648, 207, 44);
 		contentPane.add(btnSalvar);
 		
 		JButton btnCancelar = new JButton("Cancelar");
 		btnCancelar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
-					int isCancelar  = JOptionPane.showConfirmDialog(contentPane, "Tem certeza que deseja cancelar a inserção?");
-					if (isCancelar == 1) {
+					int isCancelar  = JOptionPane.showConfirmDialog(contentPane, 
+							"Tem certeza que deseja cancelar a inserção?");
+					if (isCancelar == 0) {
 						txtNome.setText(null);
 						txtCnpj.setText(null);
 					}
@@ -91,42 +87,43 @@ public class TelaCadastroDeFornecedor extends JFrame {
 				}
 			}
 		});
-		btnCancelar.setBounds(206, 226, 117, 25);
+		btnCancelar.setBounds(896, 648, 207, 44);
 		contentPane.add(btnCancelar);
 		
 		JButton btnPesquisar = new JButton("Pesquisar");
 		btnPesquisar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				TelaConsultaDeFornecedor view = new TelaConsultaDeFornecedor();
-				view.setVisible(true);
+				telaConsultaDeFornecedor.setVisible(true);
 				dispose();
 			}
 		});
-		btnPesquisar.setBounds(321, 27, 117, 25);
+		btnPesquisar.setBounds(1134, 30, 207, 44);
 		contentPane.add(btnPesquisar);
 		
 		txtNome = new JTextField();
-		txtNome.setBounds(85, 84, 300, 36);
+		txtNome.setBounds(109, 198, 1205, 57);
 		contentPane.add(txtNome);
 		txtNome.setColumns(10);
 		
 		JLabel lblNome = new JLabel("Nome");
-		lblNome.setBounds(89, 68, 70, 15);
+		lblNome.setFont(new Font("Tahoma", Font.PLAIN, 17));
+		lblNome.setBounds(109, 170, 70, 15);
 		contentPane.add(lblNome);
 		
 		JLabel lblCnpj = new JLabel("CNPJ");
-		lblCnpj.setBounds(89, 144, 70, 15);
+		lblCnpj.setFont(new Font("Tahoma", Font.PLAIN, 17));
+		lblCnpj.setBounds(109, 363, 70, 29);
 		contentPane.add(lblCnpj);
 		
-	   try {
-            MaskFormatter cnpjMask = new MaskFormatter("##.###.###/####-##");
-            txtCnpj = new JFormattedTextField(cnpjMask);
-        } catch (java.text.ParseException e) {
-            e.printStackTrace();
-        }
-
+		txtCnpj = new JFormattedTextField();
+		try {
+		    MaskFormatter cnpjMask = new MaskFormatter("##.###.###/####-##");
+		    cnpjMask.install((JFormattedTextField) txtCnpj);
+		} catch (ParseException e) {
+		    e.printStackTrace();
+		}
         txtCnpj.setColumns(10);
-        txtCnpj.setBounds(85, 160, 300, 36);
+        txtCnpj.setBounds(109, 404, 1205, 63);
         contentPane.add(txtCnpj);
 	}
 }

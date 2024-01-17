@@ -32,5 +32,11 @@ public interface FornecedorService {
 			@NotBlank(message = "O nome é obrigatório.") 
 			@Size(min = 3, message = "O nome deve ter no mínimo 3 caracteres.")
 			String nome);
+	
+	public List<Fornecedor> listarTodos();
+	
+	public Integer inativarPor(
+			@NotNull(message = "O Id é obrigatório para inativação. ")
+			Integer id);
 
 }

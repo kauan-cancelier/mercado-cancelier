@@ -20,7 +20,7 @@ private static final long serialVersionUID = 1L;
 	private List<Produto> produtos;
 
 	public ProdutosTableModel() {
-		this.produtos = new ArrayList<>();
+		this.produtos = new ArrayList<Produto>();
 	}
 	
 	public ProdutosTableModel(List<Produto> produtos) {
@@ -30,12 +30,10 @@ private static final long serialVersionUID = 1L;
 		}
 	}
 
-	@Override
 	public int getRowCount() {	
 		return produtos.size();
 	}
 	
-	@Override
 	public int getColumnCount() {
 		return QTDE_COLUNAS;
 	}
@@ -54,7 +52,6 @@ private static final long serialVersionUID = 1L;
 		throw new IllegalArgumentException("Indíce inválido");
 	}
 	
-	@Override
 	public Object getValueAt(int rowIndex, int columnIndex) {
 		if (columnIndex == 0) {
 			return produtos.get(rowIndex).getCodigo();

@@ -10,6 +10,7 @@ import com.google.common.base.Preconditions;
 import br.com.mercadocancelier.entity.Fornecedor;
 import br.com.mercadocancelier.repository.FornecedoresRepositoy;
 import br.com.mercadocancelier.service.FornecedorService;
+import jakarta.transaction.Transactional;
 
 @Service
 public class FornecedorServiceImpl implements FornecedorService {
@@ -19,11 +20,11 @@ public class FornecedorServiceImpl implements FornecedorService {
 
 	@Override
 	public Fornecedor salvar(Fornecedor fornecedor) {
-		Fornecedor outroFornecedor = repository.buscarPor(fornecedor.getNome());
+		Fornecedor outroFornecedor = repository.buscarPorCnpj(fornecedor.getCnpj());
 		if (outroFornecedor != null) {
 			if (outroFornecedor.isPersistido()) {
 				Preconditions.checkArgument(outroFornecedor.equals(fornecedor), 
-						"O nome do fornecedor já esta em uso.");
+						"O CNPJ do fornecedor já esta em uso.");
 			}
 		}
 		Fornecedor fornecedorSalvo = repository.save(fornecedor);
@@ -48,7 +49,20 @@ public class FornecedorServiceImpl implements FornecedorService {
 
 	@Override
 	public List<Fornecedor> listarPor(String nome) {
-		return repository.listarPor("%" + nome + "%");
+		return repository.listarPor(nome);
 	}
+	
+	@Override
+	public List<Fornecedor> listarTodos() {
+		return repository.listarTodos();
+	}
+	
+	@Transactional
+	public Integer inativarPor(Integer id) {
+		Preconditions.checkNotNull(id, "O fornecedor é obrigatório");
+		Integer fornecedorInvativado = repository.inativarPor(id);
+		return fornecedorInvativado;
+	}
+
 
 }

@@ -14,7 +14,7 @@ public class FornecedorTableModel extends AbstractTableModel {
 
 	private static final long serialVersionUID = 1L;
 
-	private final int QTDE_COLUNAS = 3;
+	private final int QTDE_COLUNAS = 4;
 	
 	private List<Fornecedor> fornecedores;
 
@@ -45,6 +45,8 @@ public class FornecedorTableModel extends AbstractTableModel {
 			return "Nome";
 		} else if (column == 2) {
 			return "CNPJ";
+		} else if (column == 3) {
+			return "Status";
 		}
 		throw new IllegalArgumentException("Indíce inválido");
 	}
@@ -56,12 +58,26 @@ public class FornecedorTableModel extends AbstractTableModel {
 			return fornecedores.get(rowIndex).getNome();
 		} else if (columnIndex == 2) {
 			return fornecedores.get(rowIndex).getCnpj();
+		} else if (columnIndex == 3) {
+			return fornecedores.get(rowIndex).getStatus();
 		}
 		throw new IllegalArgumentException("Índice inválido");
 	}
 	
 	public Fornecedor getPor(int rowIndex) {
 		return fornecedores.get(rowIndex);
-	}	
+	}
+	
+	public void inativou() {
+		fireTableDataChanged();
+	}
+	
+	public boolean isVazio() {
+		return fornecedores.isEmpty();
+	}
+	
+	public void limpar() {
+		this.fornecedores = new ArrayList<>();
+	}
 
 }
