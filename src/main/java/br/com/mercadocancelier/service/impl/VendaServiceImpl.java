@@ -1,5 +1,7 @@
 package br.com.mercadocancelier.service.impl;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,6 +21,11 @@ public class VendaServiceImpl implements VendaService {
 	public Venda salvar(Venda venda) {
 		Preconditions.checkNotNull(venda, "A venda é obrigatória. ");
 		return vendasRepository.save(venda);
+	}
+
+	@Override
+	public List<Venda> listarTodas() {
+		return vendasRepository.findAll();
 	}
 
 }
