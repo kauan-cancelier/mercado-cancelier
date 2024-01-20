@@ -7,14 +7,14 @@ import javax.swing.table.AbstractTableModel;
 import org.springframework.stereotype.Component;
 
 import br.com.mercadocancelier.entity.ItemVenda;
-import br.com.mercadocancelier.util.ConverteNumero;
+import br.com.mercadocancelier.util.Conversor;
 
 @Component
 public class ItensVendaTableModel extends AbstractTableModel {
 
 private static final long serialVersionUID = 1L;
 	
-	private final int QTDE_COLUNAS = 5;
+	private final int QTDE_COLUNAS = 6;
 	
 	private List<ItemVenda> itensVenda;
 
@@ -48,8 +48,10 @@ private static final long serialVersionUID = 1L;
 		} else if (column == 2) {
 			return "Qtde";
 		} else if (column == 3) {
-			return "Valor unit";
+			return "Estoque";
 		} else if (column == 4) {
+			return "Valor unit";
+		} else if (column == 5) {
 			return "Total do produto";
 		}
 		throw new IllegalArgumentException("Indíce inválido");
@@ -63,10 +65,12 @@ private static final long serialVersionUID = 1L;
 	        return itensVenda.get(rowIndex).getProduto().getNome();
 	    } else if (columnIndex == 2) {
 	        return itensVenda.get(rowIndex).getQuantidade();
-	    } else if (columnIndex == 3) {
-	        return "R$ " + ConverteNumero.numeroParaString(itensVenda.get(rowIndex).getProduto().getPreco().doubleValue());
+	    }else if (columnIndex == 3) {
+	        return itensVenda.get(rowIndex).getProduto().getEstoque();
 	    } else if (columnIndex == 4) {
-	        return "R$ " + ConverteNumero.numeroParaString(itensVenda.get(rowIndex).getPrecoTotal().doubleValue());
+	        return "R$ " + Conversor.numeroParaString(itensVenda.get(rowIndex).getProduto().getPreco().doubleValue());
+	    } else if (columnIndex == 5) {
+	        return "R$ " + Conversor.numeroParaString(itensVenda.get(rowIndex).getPrecoTotal().doubleValue());
 	    }
 		throw new IllegalArgumentException("Índice inválido");
 	}
