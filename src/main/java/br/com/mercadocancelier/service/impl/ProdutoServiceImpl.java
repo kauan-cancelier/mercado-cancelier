@@ -1,5 +1,6 @@
 package br.com.mercadocancelier.service.impl;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,6 +57,13 @@ public class ProdutoServiceImpl implements ProdutoService {
 		List<ItemVenda> itens = itensVendaRepository.listarPor(produtosRepository.buscarPor(id));
 		Preconditions.checkArgument(itens.size() == 0, "Existem vendas vinculadas a esse produto! portanto ele não pode ser excluido. ");
 		produtosRepository.excluirPor(id);			
+	}
+
+	@Override
+	public void atualizarEstoquePor(Integer id, BigDecimal quantidade) {
+		Preconditions.checkNotNull(id, "O id é obrigatório. ");
+		Preconditions.checkNotNull(quantidade, "A quantidade é obrigatória. ");
+		produtosRepository.atualizarEstoqueDoProduto(id, quantidade);
 	}
 
 }

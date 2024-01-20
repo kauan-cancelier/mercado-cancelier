@@ -15,7 +15,7 @@ public class ProdutosTableModel extends AbstractTableModel {
 
 private static final long serialVersionUID = 1L;
 	
-	private final int QTDE_COLUNAS = 4;
+	private final int QTDE_COLUNAS = 5;
 	
 	private List<Produto> produtos;
 
@@ -50,6 +50,8 @@ private static final long serialVersionUID = 1L;
 			return "Preço";
 		} else if (column == 3) {
 			return "Estoque";
+		} else if (column == 4) {
+			return "Unidade de medida";
 		}
 		throw new IllegalArgumentException("Indíce inválido");
 	}
@@ -64,6 +66,8 @@ private static final long serialVersionUID = 1L;
 			return produtos.get(rowIndex).getPreco();
 		} else if (columnIndex == 3) {
 			return produtos.get(rowIndex).getEstoque();
+		} else if (columnIndex == 4) {
+			return produtos.get(rowIndex).getUnidadeDeMedida();
 		}
 		throw new IllegalArgumentException("Índice inválido");
 	}

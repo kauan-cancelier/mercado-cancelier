@@ -47,10 +47,18 @@ public interface ProdutosRepository extends JpaRepository<Produto, Integer> {
     		+ " p.preco = :preco,"
     		+ " p.estoque = :estoque"
     		+ " WHERE p.id = :id")
-    void atualizarProduto(@Param("id") Integer id,
+    public void atualizarProduto(@Param("id") Integer id,
     		@Param("codigo") String codigo,
     		@Param("nome") String nome,
     		@Param("preco") BigDecimal preco,
-    		@Param("estoque") Integer estoque);
+    		@Param("estoque") BigDecimal estoque);
+	
+	@Transactional
+	@Modifying
+	@Query("UPDATE Produto p SET "
+			+ "p.estoque = :estoque "
+			+ "WHERE p.id = :id")
+	public void atualizarEstoqueDoProduto(@Param("id") Integer id,
+			@Param("estoque") BigDecimal estoque);
 	 
 }

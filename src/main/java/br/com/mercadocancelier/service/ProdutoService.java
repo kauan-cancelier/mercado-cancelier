@@ -1,5 +1,6 @@
 package br.com.mercadocancelier.service;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import org.springframework.validation.annotation.Validated;
@@ -23,5 +24,11 @@ public interface ProdutoService {
 	public void excluirPor(
 			@NotNull(message = "O Id é obrigatório para remoção. ")
 			Integer id);
+	
+	public void atualizarEstoquePor(
+			@NotNull(message = "O id é obrigatório. ")
+			Integer id,
+			@NotNull(message =  "A quantidade é obrigatória.")
+			BigDecimal quantidade);
 	
 }
