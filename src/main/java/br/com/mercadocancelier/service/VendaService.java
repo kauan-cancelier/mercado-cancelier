@@ -1,5 +1,6 @@
 package br.com.mercadocancelier.service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.validation.annotation.Validated;
@@ -15,4 +16,11 @@ public interface VendaService {
 			Venda venda);
 	
 	public List<Venda> listarTodas();
+	
+	public List<Venda> listar(
+			@NotNull(message = "O campo desde é obrigatório. ")
+			LocalDateTime desde, 
+			@NotNull(message = "O campo até é obrigatório. ")
+			LocalDateTime ate);
+	
 }
