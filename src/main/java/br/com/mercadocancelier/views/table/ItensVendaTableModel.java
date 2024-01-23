@@ -7,6 +7,7 @@ import javax.swing.table.AbstractTableModel;
 import org.springframework.stereotype.Component;
 
 import br.com.mercadocancelier.entity.ItemVenda;
+import br.com.mercadocancelier.entity.Produto;
 import br.com.mercadocancelier.util.Conversor;
 
 @Component
@@ -59,18 +60,20 @@ private static final long serialVersionUID = 1L;
 	
 	@Override
 	public Object getValueAt(int rowIndex, int columnIndex) {
+		ItemVenda itemVenda = itensVenda.get(rowIndex);
+		Produto produto = itemVenda.getProduto();
 		if (columnIndex == 0) {
-	        return itensVenda.get(rowIndex).getProduto().getCodigo();
+	        return produto.getCodigo();
 	    } else if (columnIndex == 1) {
-	        return itensVenda.get(rowIndex).getProduto().getNome();
+	        return produto.getNome();
 	    } else if (columnIndex == 2) {
-	        return itensVenda.get(rowIndex).getQuantidade();
+	        return Conversor.numeroParaString(itemVenda.getQuantidade()) + ' ' + produto.getUnidadeDeMedida();
 	    }else if (columnIndex == 3) {
-	        return itensVenda.get(rowIndex).getProduto().getEstoque();
+	        return Conversor.numeroParaString(produto.getEstoque());
 	    } else if (columnIndex == 4) {
-	        return "R$ " + Conversor.numeroParaString(itensVenda.get(rowIndex).getProduto().getPreco().doubleValue());
+	        return "R$ " + Conversor.numeroParaString(produto.getPreco());
 	    } else if (columnIndex == 5) {
-	        return "R$ " + Conversor.numeroParaString(itensVenda.get(rowIndex).getPrecoTotal().doubleValue());
+	        return "R$ " + Conversor.numeroParaString(itemVenda.getPrecoTotal());
 	    }
 		throw new IllegalArgumentException("Índice inválido");
 	}
