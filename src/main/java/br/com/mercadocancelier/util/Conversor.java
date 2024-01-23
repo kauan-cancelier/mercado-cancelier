@@ -1,6 +1,9 @@
 package br.com.mercadocancelier.util;
 
+import java.math.BigDecimal;
 import java.text.DecimalFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 public abstract class Conversor {
 
@@ -15,6 +18,20 @@ public abstract class Conversor {
     public static String numeroParaString(double numero) {
         DecimalFormat formato = new DecimalFormat("#,##0.00");
         return formato.format(numero);
+    }
+    
+    public static String numeroParaString(BigDecimal numero) {
+        DecimalFormat formato = new DecimalFormat("#,##0.00");
+        return formato.format(numero);
+    }
+    
+    public static String dataParaString(LocalDateTime data) {
+        if (data == null) {
+            return null;
+        }
+        
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
+        return data.format(formatter);
     }
 
 }
