@@ -1,9 +1,9 @@
 package br.com.mercadocancelier.entity.enums;
 
 public enum UnidadeDeMedida {
-	Unidade,
+	Un,
 	Kg,
 	Ml,
 	Lt,
-	Pacote
+	Pct
 }
