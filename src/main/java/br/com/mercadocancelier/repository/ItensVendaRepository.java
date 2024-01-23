@@ -20,7 +20,7 @@ public interface ItensVendaRepository extends JpaRepository<ItemVenda, Integer> 
 	 @Query(value = "SELECT iv "
 	 		+ "FROM ItemVenda iv "
 	 		+ "WHERE iv.venda = :venda")
-	 public List<ItemVenda> listarPor(@Param("venda") Venda venda);
+	 public List<ItemVenda> listarPela(@Param("venda") Venda venda);
 
 	 @Query(value = "DELETE "
 	 		+ "FROM ItemVenda iv "

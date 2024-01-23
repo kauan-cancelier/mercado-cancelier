@@ -1,5 +1,6 @@
 package br.com.mercadocancelier.service.impl;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +27,13 @@ public class VendaServiceImpl implements VendaService {
 	@Override
 	public List<Venda> listarTodas() {
 		return vendasRepository.findAll();
+	}
+
+	@Override
+	public List<Venda> listar(LocalDateTime desde, LocalDateTime ate) {
+		Preconditions.checkNotNull(desde, "O desde é obrigatório para listagem de vendas");
+		Preconditions.checkNotNull(ate, "O até é obrigatório para listagem de vendas");
+		return vendasRepository.listar(desde, ate);
 	}
 
 }
