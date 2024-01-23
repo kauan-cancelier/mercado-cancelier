@@ -7,6 +7,7 @@ import javax.swing.table.AbstractTableModel;
 import org.springframework.stereotype.Component;
 
 import br.com.mercadocancelier.entity.Venda;
+import br.com.mercadocancelier.util.Conversor;
 
 @Component
 public class VendaTableModel extends AbstractTableModel {
@@ -54,14 +55,15 @@ private static final long serialVersionUID = 1L;
 	
 	@Override
 	public Object getValueAt(int rowIndex, int columnIndex) {
+		Venda venda = vendas.get(rowIndex);
 		if (columnIndex == 0) {
-	        return vendas.get(rowIndex).getId();
+	        return venda.getId();
 	    } else if (columnIndex == 1) {
-	        return vendas.get(rowIndex).getDataDeVenda();
+	        return Conversor.dataParaString(venda.getDataDeVenda());
 	    } else if (columnIndex == 2) {
-	        return vendas.get(rowIndex).getValorTotal();
+	        return "R$ " + Conversor.numeroParaString(venda.getValorTotal());
 	    }else if (columnIndex == 3) {
-	        return vendas.get(rowIndex).getTipoDePagamento();
+	        return venda.getTipoDePagamento();
 	    }
 		throw new IllegalArgumentException("Índice inválido");
 	}
