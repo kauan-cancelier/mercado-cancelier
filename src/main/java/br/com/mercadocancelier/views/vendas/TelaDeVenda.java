@@ -421,16 +421,17 @@ public class TelaDeVenda extends JFrame {
 
 					boolean produtoJaNaLista = false;
 					
-					if (produto.getUnidadeDeMedida() != UnidadeDeMedida.Unidade) {
-						String pesoText = JOptionPane.showInputDialog(contentPane, "Digite o peso do " + produto.getNome());
-						BigDecimal peso = BigDecimal.valueOf(Conversor.stringParaNumero(pesoText));
+					if (produto.getUnidadeDeMedida() != UnidadeDeMedida.Un) {
+						Double peso = Conversor.stringParaNumero(JOptionPane.showInputDialog(contentPane, "Digite o peso do " + produto.getNome()));
 						ItemVenda itemvenda = new ItemVenda();
-						itemvenda.setPrecoTotal(produto.getPreco().multiply(peso));
-						itemvenda.setQuantidade(peso);
+						itemvenda.setProduto(produto);
+						itemvenda.setPrecoTotal(produto.getPreco().multiply(BigDecimal.valueOf(peso)));
+						itemvenda.setQuantidade(BigDecimal.valueOf(peso));
+						itensVenda.add(itemvenda);
 						produtoJaNaLista = true;
 					}
 					for (ItemVenda item : itensVenda) {
-						if (item.getProduto().equals(produto) && produto.getUnidadeDeMedida() == UnidadeDeMedida.Unidade) {
+						if (item.getProduto().equals(produto) && produto.getUnidadeDeMedida() == UnidadeDeMedida.Un) {
 							item.setQuantidade(BigDecimal.valueOf(item.getQuantidade().doubleValue() + quantidade));
 							BigDecimal precoTotal = BigDecimal.valueOf(produto.getPreco().doubleValue() * item.getQuantidade().doubleValue());
 							item.setPrecoTotal(precoTotal);
@@ -448,7 +449,7 @@ public class TelaDeVenda extends JFrame {
 						itensVenda.add(itemVenda);
 					}
 
-					setLabels(itensVenda.get(itensVenda.size()));
+					setLabels(itensVenda.get(itensVenda.size() -1));
 					carregarProdutoNaTabela(itensVenda);
 				}
 			} catch (Exception e) {
@@ -538,19 +539,22 @@ public class TelaDeVenda extends JFrame {
 	}
 
 	private void processarRemocaoItemQuantidadeMaiorQueUm(ItemVenda itemSelecionado) {
-		int qtdeParaRemover = Integer.parseInt(JOptionPane.showInputDialog(contentPane,
+		double qtdeParaRemover = Double.parseDouble(JOptionPane.showInputDialog(contentPane,
 				"O item encontrado tem mais de uma quantidade! Deseja remover quantas?"));
 		
 		if (qtdeParaRemover == itemSelecionado.getQuantidade().doubleValue()) {
 			itensVenda.remove(tbItensVenda.getSelectedRow());
 			mensagemDeAviso.abrirTela("O Item '" + itemSelecionado.getProduto().getNome() + "' foi removido.");
+			
 		} else if (qtdeParaRemover > itemSelecionado.getQuantidade().doubleValue()) {
 			mensagemDeAviso.abrirTela("A quantidade de itens para remoção é maior do que a quantidade de itens do produto. ");
-		} else if (qtdeParaRemover >= 1) {
+			
+		} else if (qtdeParaRemover >= 0.1) {
 			itemSelecionado.setQuantidade(BigDecimal.valueOf(itemSelecionado.getQuantidade().doubleValue() - qtdeParaRemover));
 			BigDecimal novoPreco = calcularNovoPreco(itemSelecionado);
 			itemSelecionado.setPrecoTotal(novoPreco);
 			exibirMensagemRemocao(itemSelecionado, qtdeParaRemover);
+			
 		} 
 	}
 	
@@ -558,7 +562,7 @@ public class TelaDeVenda extends JFrame {
 		return itemSelecionado.getProduto().getPreco().multiply(itemSelecionado.getQuantidade());
 	}
 
-	private void exibirMensagemRemocao(ItemVenda itemSelecionado, int qtdeParaRemover) {
+	private void exibirMensagemRemocao(ItemVenda itemSelecionado, double qtdeParaRemover) {
 		String mensagem = qtdeParaRemover + " unidade(s) do produto: " + itemSelecionado.getProduto().getNome() + " foram removidas";
 		mensagemDeAviso.abrirTela(mensagem);
 		tbItensVenda.updateUI();
