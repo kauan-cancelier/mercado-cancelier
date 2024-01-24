@@ -43,6 +43,7 @@ public class FornecedorServiceImpl implements FornecedorService {
 		Fornecedor fornecedorSalvo = repository.buscarPor(fornecedor.getId());
 		fornecedorSalvo.setNome(fornecedor.getNome());
 		fornecedorSalvo.setCnpj(fornecedor.getCnpj());
+		fornecedorSalvo.setStatus(fornecedorSalvo.getStatus());
 		Fornecedor fornecedorAtualizado = repository.saveAndFlush(fornecedorSalvo);
 		return buscarPor(fornecedorAtualizado.getId());
 	}
@@ -62,6 +63,13 @@ public class FornecedorServiceImpl implements FornecedorService {
 		Preconditions.checkNotNull(id, "O fornecedor é obrigatório");
 		Integer fornecedorInvativado = repository.inativarPor(id);
 		return fornecedorInvativado;
+	}
+	
+	@Transactional
+	public Integer ativarPor(Integer id) {
+		Preconditions.checkNotNull(id, "O fornecedor é obrigatório");
+		Integer fornecedorAtivado = repository.ativarPor(id);
+		return fornecedorAtivado;
 	}
 
 
