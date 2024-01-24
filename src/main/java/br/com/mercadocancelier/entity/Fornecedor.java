@@ -29,8 +29,8 @@ public class Fornecedor implements Validavel {
 	private Integer id;
 	
 	@Column(name = "nome")
-	@NotBlank(message = "O nome do fornecedor é obrigatório. ")
-	@Size(max = 255, message = "O nome deve conter no máximo 255 caracteres")
+	@NotBlank(message = "O nome do fornecedor é obrigatório.")
+	@Size(max = 255, min = 3, message = "O nome deve conter entre 3 a 255 caracteres.")
 	private String nome;
 	
 	@Column(name = "cnpj")
@@ -47,17 +47,27 @@ public class Fornecedor implements Validavel {
 		this.status = Status.A;
 	}
 	
+	public Fornecedor(String nome, String cnpj) {
+		this.nome = nome;
+		this.cnpj = cnpj;
+		this.status = Status.A;
+	}
+	
 	@Transient
 	@Override
 	public boolean isPersistido() {
 		return getId() != null && getId() > 0;
+	}
+	
+	@Override
+	public boolean isAtivo() {
+		return getStatus() == Status.A;
 	}
 
 	@Override
 	public String toString() {
 		return nome;
 	}
-	
-	
+
 
 }
