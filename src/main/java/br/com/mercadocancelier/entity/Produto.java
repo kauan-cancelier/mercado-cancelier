@@ -49,6 +49,5 @@ public class Produto implements Validavel {
 	public boolean isPersistido() {
 		return getId() != null && getId() > 0;
 	}
-	
 
 }

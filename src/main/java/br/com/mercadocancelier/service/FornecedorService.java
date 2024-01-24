@@ -38,5 +38,10 @@ public interface FornecedorService {
 	public Integer inativarPor(
 			@NotNull(message = "O Id é obrigatório para inativação. ")
 			Integer id);
+	
+	public Integer ativarPor(
+			@NotNull(message = "O Id é obrigatório para ativação. ")
+			Integer id);
+
 
 }

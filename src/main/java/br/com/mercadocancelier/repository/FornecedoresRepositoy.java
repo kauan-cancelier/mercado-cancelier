@@ -35,7 +35,8 @@ public interface FornecedoresRepositoy extends JpaRepository<Fornecedor, Integer
 	public Fornecedor buscarPor(@Param("id") Integer id);
 	
 	@Query(value = "SELECT f "
-			+ "FROM Fornecedor f")
+			+ "FROM Fornecedor f "
+			+ "ORDER BY f.nome")
 	public List<Fornecedor> listarTodos();
 	
 	@Modifying
@@ -44,5 +45,12 @@ public interface FornecedoresRepositoy extends JpaRepository<Fornecedor, Integer
 			+ "WHERE f.status = 'A' "
 			+ "AND f.id = :id")
 	public Integer inativarPor(@Param("id") Integer id);
-
+	
+	@Modifying
+	@Query("UPDATE Fornecedor f "
+			+ "SET f.status = 'A' "
+			+ "WHERE f.status = 'I' "
+			+ "AND f.id = :id")
+	public Integer ativarPor(@Param("id") Integer id);
+	
 }
