@@ -52,23 +52,28 @@ public class FornecedorTableModel extends AbstractTableModel {
 	}
 	
 	public Object getValueAt(int rowIndex, int columnIndex) {
-		if (columnIndex == 0) {
-			return fornecedores.get(rowIndex).getId();
-		} else if (columnIndex == 1) {
-			return fornecedores.get(rowIndex).getNome();
-		} else if (columnIndex == 2) {
-			return fornecedores.get(rowIndex).getCnpj();
-		} else if (columnIndex == 3) {
-			return fornecedores.get(rowIndex).getStatus();
-		}
-		throw new IllegalArgumentException("Índice inválido");
+	    Fornecedor fornecedor = fornecedores.get(rowIndex);
+	    switch (columnIndex) {
+	        case 0: return fornecedor.getId();
+	        case 1: return fornecedor.getNome();
+	        case 2: return formatarCnpj(fornecedor.getCnpj());
+	        case 3: return fornecedor.getStatus();
+	        default: throw new IllegalArgumentException("Índice inválido");
+	    }
+	}
+
+	private String formatarCnpj(String cnpj) {
+	    if (cnpj != null && cnpj.length() == 14) {
+	        return cnpj.replaceAll("(\\d{2})(\\d{3})(\\d{3})(\\d{4})(\\d{2})", "$1.$2.$3/$4-$5");
+	    }
+	    return cnpj;
 	}
 	
 	public Fornecedor getPor(int rowIndex) {
 		return fornecedores.get(rowIndex);
 	}
 	
-	public void inativou() {
+	public void atualizarStatusNaTabela() {
 		fireTableDataChanged();
 	}
 	
