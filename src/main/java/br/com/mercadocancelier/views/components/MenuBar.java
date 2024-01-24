@@ -17,6 +17,8 @@ import org.springframework.stereotype.Component;
 
 import br.com.mercadocancelier.views.fornecedor.TelaConsultaDeFornecedor;
 import br.com.mercadocancelier.views.produtos.TelaConsultaDeProdutos;
+import br.com.mercadocancelier.views.vendas.TelaConsultaDeVenda;
+import br.com.mercadocancelier.views.vendas.TelaDeVenda;
 
 @Component
 public class MenuBar extends JMenuBar {
@@ -30,7 +32,10 @@ public class MenuBar extends JMenuBar {
 
     @Autowired
     @Lazy
-    private TelaConsultaDeFornecedor telaConsultaDeFornecedor;
+    private TelaDeVenda telaDeVenda;
+    
+    @Autowired
+    private TelaConsultaDeVenda telaConsultaDeVenda;
 
     public MenuBar() {
         createMenus(
@@ -71,6 +76,7 @@ public class MenuBar extends JMenuBar {
 		
 		menuItemProdutos = new JMenuItem("Produtos");
 		menuItemProdutos.addActionListener(new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent e) {
             	telaConsultaDeProdutos.abrirTela();
             }
@@ -80,7 +86,8 @@ public class MenuBar extends JMenuBar {
 		menuItemFornecedor = new JMenuItem("Fornecedor");
 		menuItemFornecedor.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-            	telaConsultaDeFornecedor.setVisible(true);
+            	TelaConsultaDeFornecedor view = new TelaConsultaDeFornecedor();
+            	view.setVisible(true);
             }
         });
 		menuCadastros.add(menuItemFornecedor);
@@ -101,6 +108,7 @@ public class MenuBar extends JMenuBar {
 		
 		menuVenda = new JMenu("Venda");
 		menuVenda.setFont(new Font("Segoe UI", Font.PLAIN, 30));
+		
 		menuBar.add(menuVenda);
 		
 		menuMercado = new JMenu("Mercado");

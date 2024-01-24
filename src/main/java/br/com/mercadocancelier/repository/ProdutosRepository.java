@@ -24,8 +24,16 @@ public interface ProdutosRepository extends JpaRepository<Produto, Integer> {
 			+ "FROM Produto p")
 	public List<Produto> listarTodos();
 	
-	@Query("SELECT p FROM Produto p WHERE UPPER(p.nome) LIKE UPPER(:nome)")
+	@Query("SELECT p"
+			+ " FROM Produto p"
+			+ " WHERE UPPER(p.nome)"
+			+ " LIKE UPPER(:nome)")
 	public List<Produto> listarPor(@Param("nome") String nome);
+	
+	@Query("SELECT p"
+			+ " FROM Produto p"
+			+ " WHERE p.codigo = :codigo")
+	public Produto buscarPor(@Param("codigo") String codigo);
 	
 	@Modifying
 	@Query("DELETE FROM Produto p WHERE p.id = :id")
@@ -39,10 +47,18 @@ public interface ProdutosRepository extends JpaRepository<Produto, Integer> {
     		+ " p.preco = :preco,"
     		+ " p.estoque = :estoque"
     		+ " WHERE p.id = :id")
-    void atualizarProduto(@Param("id") Integer id,
+    public void atualizarProduto(@Param("id") Integer id,
     		@Param("codigo") String codigo,
     		@Param("nome") String nome,
     		@Param("preco") BigDecimal preco,
-    		@Param("estoque") Integer estoque);
+    		@Param("estoque") BigDecimal estoque);
+	
+	@Transactional
+	@Modifying
+	@Query("UPDATE Produto p SET "
+			+ "p.estoque = :estoque "
+			+ "WHERE p.id = :id")
+	public void atualizarEstoqueDoProduto(@Param("id") Integer id,
+			@Param("estoque") BigDecimal estoque);
 	 
 }

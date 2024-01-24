@@ -1,5 +1,6 @@
 package br.com.mercadocancelier.views.fornecedor;
 
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
@@ -29,7 +30,6 @@ import br.com.mercadocancelier.entity.Fornecedor;
 import br.com.mercadocancelier.service.FornecedorService;
 import br.com.mercadocancelier.views.table.FornecedorTableModel;
 import jakarta.annotation.PostConstruct;
-import java.awt.Color;
 
 @Component
 public class TelaConsultaDeFornecedor extends JFrame {

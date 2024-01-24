@@ -11,7 +11,6 @@ import java.util.List;
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.JButton;
-import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -31,10 +30,9 @@ import org.springframework.stereotype.Component;
 import br.com.mercadocancelier.entity.Produto;
 import br.com.mercadocancelier.service.ProdutoService;
 import br.com.mercadocancelier.views.table.ProdutosTableModel;
-import jakarta.annotation.PostConstruct;
 
 @Component
-public class TelaConsultaDeProdutos extends JDialog {
+public class TelaConsultaDeProdutos extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 
@@ -52,17 +50,14 @@ public class TelaConsultaDeProdutos extends JDialog {
 	private ProdutoService produtoService;
 
 	public void abrirTela() {
-		this.inicializarComponentes();
 		this.configurarTabela();
 		this.listarProdutos();
 		this.setVisible(true);
 	}
 
 	public TelaConsultaDeProdutos() {
-	}
-
-	@PostConstruct
-	private void inicializarComponentes() {
+		setResizable(false);
+		setTitle("Cadastro de produtos");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 1366, 768);
 
@@ -207,6 +202,7 @@ public class TelaConsultaDeProdutos extends JDialog {
 		scrollPane.setViewportView(tbProdutos);
 		contentPane.setLayout(gl_contentPane);
 	}
+
 
 	private void listarProdutos() {
 		List<Produto> produtos = new ArrayList<>();

@@ -33,7 +33,7 @@ public class ItemVenda implements Validavel {
 
 	@Column(name = "quantidade")
 	@NotNull(message = "A quantidade do item de venda é obrigatório. ")
-	private Integer quantidade;
+	private BigDecimal quantidade;
 	
 	@ManyToOne
 	@JoinColumn(name = "id_produto")

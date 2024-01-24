@@ -18,7 +18,7 @@ public class InitApp {
 
 	@Autowired
 	private TelaPrincipal telaPrincipal;
-
+	
 	public static void main(String[] args) {
 		SpringApplicationBuilder builder = new SpringApplicationBuilder(InitApp.class);
 		builder.headless(false);

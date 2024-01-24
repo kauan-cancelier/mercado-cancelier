@@ -9,12 +9,13 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.math.BigDecimal;
 
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.JButton;
-import javax.swing.JDialog;
+import javax.swing.JComboBox;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.LayoutStyle.ComponentPlacement;
@@ -24,10 +25,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import br.com.mercadocancelier.entity.Produto;
+import br.com.mercadocancelier.entity.enums.UnidadeDeMedida;
 import br.com.mercadocancelier.service.ProdutoService;
+import br.com.mercadocancelier.util.Conversor;
+import br.com.mercadocancelier.views.components.MensagemDeAviso;
+import br.com.mercadocancelier.views.components.MensagemDeSucesso;
 
 @Component
-public class TelaCadastroDeProdutos extends JDialog {
+public class TelaCadastroDeProdutos extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 
@@ -44,10 +49,16 @@ public class TelaCadastroDeProdutos extends JDialog {
 
 	@Autowired
 	private TelaConsultaDeProdutos telaConsultaDeProdutos;
+	
+	@Autowired
+	private MensagemDeAviso mensagemDeAviso;
+	
+	@Autowired
+	private MensagemDeSucesso mensagemDeSucesso;
 
 	private JTextField txtEstoqueInicial;
 	
-	Produto produto;
+	private Produto produto;
 
 	public void abrirTela() {
 		produto = null;
@@ -146,35 +157,78 @@ public class TelaCadastroDeProdutos extends JDialog {
 						.addComponent(txtEstoqueInicial, GroupLayout.DEFAULT_SIZE, 47, Short.MAX_VALUE)
 						.addContainerGap()));
 		panel_4.setLayout(gl_panel_4);
+		
+		JPanel panel_4_1 = new JPanel();
+		
+		JLabel lblUnidadeDeMedida = new JLabel("Unidade de medida");
+		lblUnidadeDeMedida.setFont(new Font("Dialog", Font.PLAIN, 17));
+		
+		JComboBox<UnidadeDeMedida> cbxUnidadeDeMedida = new JComboBox<UnidadeDeMedida>();
+		cbxUnidadeDeMedida.setModel(new DefaultComboBoxModel<UnidadeDeMedida>(UnidadeDeMedida.values()));
+		cbxUnidadeDeMedida.setSelectedIndex(-1);
+		GroupLayout gl_panel_4_1 = new GroupLayout(panel_4_1);
+		gl_panel_4_1.setHorizontalGroup(
+			gl_panel_4_1.createParallelGroup(Alignment.LEADING)
+				.addGroup(gl_panel_4_1.createSequentialGroup()
+					.addContainerGap()
+					.addGroup(gl_panel_4_1.createParallelGroup(Alignment.LEADING)
+						.addComponent(cbxUnidadeDeMedida, 0, 273, Short.MAX_VALUE)
+						.addComponent(lblUnidadeDeMedida))
+					.addContainerGap())
+		);
+		gl_panel_4_1.setVerticalGroup(
+			gl_panel_4_1.createParallelGroup(Alignment.LEADING)
+				.addGroup(gl_panel_4_1.createSequentialGroup()
+					.addGap(22)
+					.addComponent(lblUnidadeDeMedida)
+					.addPreferredGap(ComponentPlacement.RELATED)
+					.addComponent(cbxUnidadeDeMedida, GroupLayout.DEFAULT_SIZE, 47, Short.MAX_VALUE)
+					.addContainerGap())
+		);
+		panel_4_1.setLayout(gl_panel_4_1);
 		GroupLayout groupLayout = new GroupLayout(getContentPane());
-		groupLayout.setHorizontalGroup(groupLayout.createParallelGroup(Alignment.TRAILING).addGroup(groupLayout
-				.createSequentialGroup().addContainerGap()
-				.addGroup(groupLayout.createParallelGroup(Alignment.TRAILING)
-						.addGroup(Alignment.LEADING, groupLayout.createSequentialGroup()
-								.addComponent(panel_4, GroupLayout.PREFERRED_SIZE, 627, GroupLayout.PREFERRED_SIZE)
-								.addPreferredGap(ComponentPlacement.RELATED, 240, Short.MAX_VALUE)
-								.addComponent(panel_3, GroupLayout.PREFERRED_SIZE, 439, GroupLayout.PREFERRED_SIZE))
+		groupLayout.setHorizontalGroup(
+			groupLayout.createParallelGroup(Alignment.TRAILING)
+				.addGroup(groupLayout.createSequentialGroup()
+					.addContainerGap()
+					.addGroup(groupLayout.createParallelGroup(Alignment.TRAILING)
 						.addComponent(btnPesquisar, GroupLayout.PREFERRED_SIZE, 207, GroupLayout.PREFERRED_SIZE)
 						.addGroup(groupLayout.createSequentialGroup()
-								.addComponent(panel, GroupLayout.PREFERRED_SIZE, 627, GroupLayout.PREFERRED_SIZE)
-								.addPreferredGap(ComponentPlacement.RELATED, 52, Short.MAX_VALUE)
-								.addComponent(panel_1, GroupLayout.PREFERRED_SIZE, 627, GroupLayout.PREFERRED_SIZE))
-						.addComponent(panel_2, GroupLayout.DEFAULT_SIZE, 1306, Short.MAX_VALUE))
-				.addGap(34)));
-		groupLayout.setVerticalGroup(groupLayout.createParallelGroup(Alignment.LEADING).addGroup(groupLayout
-				.createSequentialGroup().addGap(66)
-				.addGroup(groupLayout.createParallelGroup(Alignment.TRAILING)
-						.addGroup(groupLayout.createSequentialGroup()
-								.addComponent(btnPesquisar, GroupLayout.PREFERRED_SIZE, 40, GroupLayout.PREFERRED_SIZE)
-								.addGap(18)
-								.addComponent(panel_1, GroupLayout.PREFERRED_SIZE, 107, GroupLayout.PREFERRED_SIZE))
+							.addComponent(panel_4, GroupLayout.PREFERRED_SIZE, 297, GroupLayout.PREFERRED_SIZE)
+							.addGap(30)
+							.addComponent(panel_4_1, GroupLayout.PREFERRED_SIZE, 297, GroupLayout.PREFERRED_SIZE)
+							.addPreferredGap(ComponentPlacement.RELATED, 247, Short.MAX_VALUE)
+							.addComponent(panel_3, GroupLayout.PREFERRED_SIZE, 439, GroupLayout.PREFERRED_SIZE))
+						.addGroup(Alignment.LEADING, groupLayout.createSequentialGroup()
+							.addComponent(panel, GroupLayout.PREFERRED_SIZE, 627, GroupLayout.PREFERRED_SIZE)
+							.addPreferredGap(ComponentPlacement.RELATED, 56, Short.MAX_VALUE)
+							.addComponent(panel_1, GroupLayout.PREFERRED_SIZE, 627, GroupLayout.PREFERRED_SIZE))
+						.addComponent(panel_2, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 1310, Short.MAX_VALUE))
+					.addGap(34))
+		);
+		groupLayout.setVerticalGroup(
+			groupLayout.createParallelGroup(Alignment.LEADING)
+				.addGroup(groupLayout.createSequentialGroup()
+					.addGap(39)
+					.addComponent(btnPesquisar, GroupLayout.PREFERRED_SIZE, 40, GroupLayout.PREFERRED_SIZE)
+					.addGap(45)
+					.addGroup(groupLayout.createParallelGroup(Alignment.TRAILING)
+						.addComponent(panel_1, GroupLayout.PREFERRED_SIZE, 107, GroupLayout.PREFERRED_SIZE)
 						.addComponent(panel, GroupLayout.PREFERRED_SIZE, 107, GroupLayout.PREFERRED_SIZE))
-				.addGap(18).addComponent(panel_2, GroupLayout.PREFERRED_SIZE, 107, GroupLayout.PREFERRED_SIZE)
-				.addGap(18)
-				.addGroup(groupLayout.createParallelGroup(Alignment.TRAILING)
-						.addComponent(panel_4, GroupLayout.PREFERRED_SIZE, 107, GroupLayout.PREFERRED_SIZE)
-						.addComponent(panel_3, GroupLayout.PREFERRED_SIZE, 84, GroupLayout.PREFERRED_SIZE))
-				.addGap(53)));
+					.addGap(18)
+					.addComponent(panel_2, GroupLayout.PREFERRED_SIZE, 107, GroupLayout.PREFERRED_SIZE)
+					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+						.addGroup(groupLayout.createSequentialGroup()
+							.addPreferredGap(ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+							.addComponent(panel_3, GroupLayout.PREFERRED_SIZE, 84, GroupLayout.PREFERRED_SIZE)
+							.addGap(11))
+						.addGroup(groupLayout.createSequentialGroup()
+							.addGap(18)
+							.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+								.addComponent(panel_4_1, GroupLayout.PREFERRED_SIZE, 107, GroupLayout.PREFERRED_SIZE)
+								.addComponent(panel_4, GroupLayout.PREFERRED_SIZE, 107, GroupLayout.PREFERRED_SIZE))
+							.addGap(62))))
+		);
 
 		JButton btnCancelar = new JButton("Cancelar");
 		btnCancelar.setBackground(SystemColor.text);
@@ -196,7 +250,9 @@ public class TelaCadastroDeProdutos extends JDialog {
 					String nome = txtNome.getText();
 					String preco = txtPreco.getText();
 					String estoqueInicial = txtEstoqueInicial.getText();
-					Produto produtoParaSalvar = montarProduto(codigo, nome, preco, estoqueInicial);
+					String unidadeDeMedida = cbxUnidadeDeMedida.getSelectedItem().toString();
+					
+					Produto produtoParaSalvar = montarProduto(codigo, nome, preco, estoqueInicial, unidadeDeMedida);
 					if (produto != null && produto.getId() != null) {
 		                produtoParaSalvar.setId(produto.getId());
 		            }
@@ -253,46 +309,54 @@ public class TelaCadastroDeProdutos extends JDialog {
 	private void salvar(Produto produto) {
 		produtoService.salvar(produto);
 		limparCampos();
-		JOptionPane.showMessageDialog(contentPanel, "Produto salvo. ");
+		mensagemDeSucesso.abrirTela("Produto salvo.");
 	}
 
-	private Produto montarProduto(String codigo, String nome, String preco, String estoqueInicial) {
+	private Produto montarProduto(String codigo, String nome, String preco, String estoqueInicial, String unidadeDeMedida) {
+		
 		if (codigo.isBlank()) {
-			JOptionPane.showMessageDialog(contentPanel, "O código é obrigatório para salvar. ");
+			mensagemDeAviso.abrirTela("O código é obrigatório para salvar. ");
 			return null;
 		}
 		
 		if (nome.isBlank()) {
-			JOptionPane.showMessageDialog(contentPanel, "O nome é obrigatório para salvar. ");
+			mensagemDeAviso.abrirTela("O nome é obrigatório.");
 			return null;
 		}
 		
 		if (preco.isBlank()) {
-			JOptionPane.showMessageDialog(contentPanel, "O preço é obrigatório para salvar. ");
+			mensagemDeAviso.abrirTela("O preço é obrigatório. ");
 			return null;
 		}
 		
 		if (estoqueInicial.isBlank()) {
-			JOptionPane.showMessageDialog(contentPanel, "O estoque inicial é obrigatório para salvar. ");
+			mensagemDeAviso.abrirTela("O estoque inicial é obrigatória. ");
+			return null;
+		}
+		
+		if (unidadeDeMedida.isBlank()) {
+			mensagemDeAviso.abrirTela("A unidade de medida é obrigatória. ");
 			return null;
 		}
 		
 		Produto produto = new Produto();
 		produto.setCodigo(codigo);
 		produto.setNome(nome);
+		produto.setUnidadeDeMedida(UnidadeDeMedida.valueOf(unidadeDeMedida));
 		
 		try {
-			Double precoDouble = Double.parseDouble(preco);
+			Double precoDouble = Conversor.stringParaNumero(preco);
 			produto.setPreco(BigDecimal.valueOf(precoDouble));
 		} catch (Exception e) {
-			JOptionPane.showMessageDialog(contentPanel, "Ocorreu um erro ao salvar o preço. ");
+			mensagemDeAviso.abrirTela("Ocorreu um erro ao salvar o preço. ");
 			return null;
 		}
 		
 		try {
-			produto.setEstoque(Integer.parseInt(estoqueInicial));
+			
+			produto.setEstoque(BigDecimal.valueOf(Conversor.stringParaNumero(estoqueInicial)));
 		} catch (Exception e) {
-			JOptionPane.showMessageDialog(contentPanel, "Ocorreu um erro ao salvar o estoque inicial. ");
+			mensagemDeAviso.abrirTela("Ocorreu um erro ao salvar o estoque inicial. ");
 			return null;
 		}
 		

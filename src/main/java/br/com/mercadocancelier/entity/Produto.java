@@ -2,8 +2,11 @@ package br.com.mercadocancelier.entity;
 
 import java.math.BigDecimal;
 
+import br.com.mercadocancelier.entity.enums.UnidadeDeMedida;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -40,9 +43,14 @@ public class Produto implements Validavel {
 	@NotNull(message = "O preço do produto é obrigatório. ")
 	private BigDecimal preco;
 	
+	@Column(name = "unidade_medida")
+	@Enumerated(EnumType.STRING)
+	@NotNull(message = "A unidade de medida é obrigatória. ")
+	private UnidadeDeMedida unidadeDeMedida;
+	
 	@Column(name = "estoque")
 	@NotNull(message = "O estoque do produto é obrigatório. ")
-	private Integer estoque;
+	private BigDecimal estoque;
 
 	@Transient
 	@Override

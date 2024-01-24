@@ -9,21 +9,20 @@ import org.springframework.stereotype.Component;
 
 import br.com.mercadocancelier.entity.Produto;
 
-
 @Component
-public class ProdutosTableModel extends AbstractTableModel {
+public class EstoqueTableModel extends AbstractTableModel {
 
-private static final long serialVersionUID = 1L;
-	
+	private static final long serialVersionUID = 1L;
+
 	private final int QTDE_COLUNAS = 5;
 	
 	private List<Produto> produtos;
 
-	public ProdutosTableModel() {
+	public EstoqueTableModel() {
 		this.produtos = new ArrayList<Produto>();
 	}
 	
-	public ProdutosTableModel(List<Produto> produtos) {
+	public EstoqueTableModel(List<Produto> produtos) {
 		this();
 		if (produtos != null && !produtos.isEmpty()) {		
 			this.produtos = produtos;
@@ -47,16 +46,16 @@ private static final long serialVersionUID = 1L;
 		} else if (column == 2) {
 			return "Preço";
 		} else if (column == 3) {
-			return "Estoque";
+			return "Qtde";
 		} else if (column == 4) {
-			return "Unidade de medida";
+			return "Última entrada";
 		}
 		throw new IllegalArgumentException("Indíce inválido");
 	}
 	
 	public Object getValueAt(int rowIndex, int columnIndex) {
 		if (columnIndex == 0) {
-			return produtos.get(rowIndex).getCodigo();
+			return produtos.get(rowIndex).getId();
 		} else if (columnIndex == 1) {
 			return produtos.get(rowIndex).getNome();
 		} else if (columnIndex == 2) {
@@ -64,7 +63,7 @@ private static final long serialVersionUID = 1L;
 		} else if (columnIndex == 3) {
 			return produtos.get(rowIndex).getEstoque();
 		} else if (columnIndex == 4) {
-			return produtos.get(rowIndex).getUnidadeDeMedida();
+			return "criar entrada";
 		}
 		throw new IllegalArgumentException("Índice inválido");
 	}
