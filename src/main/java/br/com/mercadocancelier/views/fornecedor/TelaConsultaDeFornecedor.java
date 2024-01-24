@@ -20,6 +20,8 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 import javax.swing.border.EmptyBorder;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableCellRenderer;
 
 import org.hibernate.validator.internal.util.stereotypes.Lazy;
@@ -132,6 +134,20 @@ public class TelaConsultaDeFornecedor extends JFrame {
 		tableFornecedor.getTableHeader()
 				.setPreferredSize(new Dimension(tableFornecedor.getTableHeader().getWidth(), 50));
 		tableFornecedor.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		  ListSelectionModel selectionModel = tableFornecedor.getSelectionModel();
+	        selectionModel.addListSelectionListener(new ListSelectionListener() {
+	            @Override
+	            public void valueChanged(ListSelectionEvent e) {
+	                if (!e.getValueIsAdjusting()) {
+	                    int selectedRow = tableFornecedor.getSelectedRow();
+	                    if (selectedRow >= 0) {
+	                        FornecedorTableModel model = (FornecedorTableModel) tableFornecedor.getModel();
+	                        Fornecedor fornecedorSelecionado = model.getPor(selectedRow);
+	                        atualizarTextoBotao(fornecedorSelecionado);
+	                    }
+	                }
+	            }
+	        });
 		tableFornecedor.getTableHeader().setReorderingAllowed(false);
 		tableFornecedor.getTableHeader().setResizingAllowed(false);
 

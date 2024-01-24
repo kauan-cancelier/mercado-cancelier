@@ -17,7 +17,6 @@ import org.springframework.stereotype.Component;
 
 import br.com.mercadocancelier.views.fornecedor.TelaConsultaDeFornecedor;
 import br.com.mercadocancelier.views.produtos.TelaConsultaDeProdutos;
-import br.com.mercadocancelier.views.vendas.TelaConsultaDeVenda;
 import br.com.mercadocancelier.views.vendas.TelaDeVenda;
 
 @Component
@@ -34,8 +33,9 @@ public class MenuBar extends JMenuBar {
     @Lazy
     private TelaDeVenda telaDeVenda;
     
+    
     @Autowired
-    private TelaConsultaDeVenda telaConsultaDeVenda;
+    private TelaConsultaDeFornecedor telaConsultaDeFornecedor;
 
     public MenuBar() {
         createMenus(
@@ -86,8 +86,7 @@ public class MenuBar extends JMenuBar {
 		menuItemFornecedor = new JMenuItem("Fornecedor");
 		menuItemFornecedor.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-            	TelaConsultaDeFornecedor view = new TelaConsultaDeFornecedor();
-            	view.setVisible(true);
+            	telaConsultaDeFornecedor.setVisible(true);;
             }
         });
 		menuCadastros.add(menuItemFornecedor);
