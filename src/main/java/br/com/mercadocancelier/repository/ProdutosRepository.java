@@ -24,28 +24,39 @@ public interface ProdutosRepository extends JpaRepository<Produto, Integer> {
 			+ "FROM Produto p")
 	public List<Produto> listarTodos();
 	
-	@Query("SELECT p"
-			+ " FROM Produto p"
-			+ " WHERE UPPER(p.nome)"
+	@Query(value = "SELECT p.nome "
+			+ "FROM Produto p ")
+	public List<String> listarTodosProdutosPorNome();
+	
+	@Query("SELECT p "
+			+ " FROM Produto p "
+			+ " WHERE UPPER(p.nome) "
 			+ " LIKE UPPER(:nome)")
 	public List<Produto> listarPor(@Param("nome") String nome);
 	
-	@Query("SELECT p"
-			+ " FROM Produto p"
+	@Query("SELECT p "
+			+ " FROM Produto p "
 			+ " WHERE p.codigo = :codigo")
 	public Produto buscarPor(@Param("codigo") String codigo);
 	
+	@Query("SELECT p "
+			+ " FROM Produto p "
+			+ " WHERE UPPER(p.nome) "
+			+ " LIKE UPPER(:nome) ")
+	public Produto buscarPorNome(@Param("nome") String nome);
+	
 	@Modifying
-	@Query("DELETE FROM Produto p WHERE p.id = :id")
+	@Query("DELETE FROM Produto p "
+			+ "WHERE p.id = :id")
 	public void excluirPor(@Param("id") Integer id);
 	
 	@Transactional
     @Modifying
-    @Query("UPDATE Produto p SET"
-    		+ " p.codigo = :codigo,"
-    		+ " p.nome = :nome,"
-    		+ " p.preco = :preco,"
-    		+ " p.estoque = :estoque"
+    @Query("UPDATE Produto p SET "
+    		+ " p.codigo = :codigo, "
+    		+ " p.nome = :nome, "
+    		+ " p.preco = :preco, "
+    		+ " p.estoque = :estoque "
     		+ " WHERE p.id = :id")
     public void atualizarProduto(@Param("id") Integer id,
     		@Param("codigo") String codigo,
