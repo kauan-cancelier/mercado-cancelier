@@ -20,10 +20,10 @@ public class ProdutoServiceImpl implements ProdutoService {
 
 	@Autowired
 	private ProdutosRepository produtosRepository;
-	
+
 	@Autowired
 	private ItensVendaRepository itensVendaRepository;
-	
+
 	public List<Produto> listarTodos() {
 		return produtosRepository.listarTodos();
 	}
@@ -36,8 +36,14 @@ public class ProdutoServiceImpl implements ProdutoService {
 
 	@Override
 	public Produto buscarPor(String codigo) {
-		Preconditions.checkNotNull(codigo, "O codigo do produto é obrigatório para listagem. ");
+		Preconditions.checkNotNull(codigo, "O codigo do produto é obrigatório para busca. ");
 		return produtosRepository.buscarPor(codigo);
+	}
+	
+	@Override
+	public Produto buscarPorNome(String nome) {
+		Preconditions.checkNotNull(nome, "O nome do produto é obrigatório para busca. ");
+		return produtosRepository.buscarPorNome(nome);
 	}
 
 	@Override
@@ -55,8 +61,9 @@ public class ProdutoServiceImpl implements ProdutoService {
 	public void excluirPor(Integer id) {
 		Preconditions.checkNotNull(id, "O produto é obrigatório");
 		List<ItemVenda> itens = itensVendaRepository.listarPor(produtosRepository.buscarPor(id));
-		Preconditions.checkArgument(itens.size() == 0, "Existem vendas vinculadas a esse produto! portanto ele não pode ser excluido. ");
-		produtosRepository.excluirPor(id);			
+		Preconditions.checkArgument(itens.size() == 0,
+				"Existem vendas vinculadas a esse produto! portanto ele não pode ser excluido. ");
+		produtosRepository.excluirPor(id);
 	}
 
 	@Override
@@ -64,6 +71,11 @@ public class ProdutoServiceImpl implements ProdutoService {
 		Preconditions.checkNotNull(id, "O id é obrigatório. ");
 		Preconditions.checkNotNull(quantidade, "A quantidade é obrigatória. ");
 		produtosRepository.atualizarEstoqueDoProduto(id, quantidade);
+	}
+
+	@Override
+	public List<String> listarTodosProdutosPorNome() {
+		return produtosRepository.listarTodosProdutosPorNome();
 	}
 
 }
