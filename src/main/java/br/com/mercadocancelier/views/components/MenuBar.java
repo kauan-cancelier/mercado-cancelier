@@ -12,6 +12,7 @@ import org.hibernate.validator.internal.util.stereotypes.Lazy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import br.com.mercadocancelier.views.entradas.TelaRegistroDeEntrada;
 import br.com.mercadocancelier.views.fornecedor.TelaConsultaDeFornecedor;
 import br.com.mercadocancelier.views.produtos.TelaConsultaDeProdutos;
 import br.com.mercadocancelier.views.vendas.TelaConsultaDeVenda;
@@ -37,6 +38,10 @@ public class MenuBar extends JMenuBar {
     @Autowired
     @Lazy
     private TelaConsultaDeVenda telaConsultaDeVenda;
+    
+    @Autowired
+    @Lazy
+    private TelaRegistroDeEntrada telaRegistroDeEntrada;
 
     public MenuBar() {
         initComponents();
@@ -63,6 +68,7 @@ public class MenuBar extends JMenuBar {
 
     private JMenu createMenuMovimentacao() {
         JMenu menuMovimentacao = createMenu("Movimentação");
+        menuMovimentacao.add(createMenuItem("Entrada", e -> telaRegistroDeEntrada.setVisible(true)));
         return menuMovimentacao;
     }
 

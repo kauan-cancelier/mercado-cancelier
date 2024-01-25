@@ -13,9 +13,13 @@ public interface ProdutoService {
 	
 	public List<Produto> listarTodos();
 	
+	public List<String> listarTodosProdutosPorNome();
+	
 	public List<Produto> listarPor(String nome);
 	
 	public Produto buscarPor(String codigo);
+	
+	public Produto buscarPorNome(String nome);
 	
 	public void salvar(
 			@NotNull(message = "O produto é obrigatório. ")
