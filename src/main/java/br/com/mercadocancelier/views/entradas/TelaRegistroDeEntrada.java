@@ -235,7 +235,6 @@ public class TelaRegistroDeEntrada extends JFrame {
 						EntradaTableModel model = (EntradaTableModel) tableEntrada.getModel();
 						model.removerEntrada(selectedRow);
 						totalGeral = model.calcularTotal();
-						lblTotal.setText("Total: " + totalGeral);
 						lblTotal.setText("Total: R$" + totalGeral);
 					}
 				} else {
@@ -342,11 +341,12 @@ public class TelaRegistroDeEntrada extends JFrame {
 	// VALIDAÇÕES
 
 	private boolean validarCampos() {
-		return validarQuantidadeEPreco() && validarFornecedor() && validarData()
-				&& validarCamposObrigatorios() && validarUnidadeDeMedida();
+		return validarProduto() && validarFornecedor() && validarData()
+				&& validarQuantidadeEPreco() && validarUnidadeDeMedida();
 	}
 
 	private boolean validarQuantidadeEPreco() {
+		UnidadeDeMedida unidadeMedida = (UnidadeDeMedida) cbUnidadeMedida.getSelectedItem();
 		double quantidade;
 		BigDecimal preco;
 		try {
@@ -360,6 +360,12 @@ public class TelaRegistroDeEntrada extends JFrame {
 		if (quantidade <= 0 || preco.compareTo(BigDecimal.ZERO) <= 0) {
 			JOptionPane.showMessageDialog(contentPane,
 					"Digite valores numéricos maior que zero para quantidade e preço.");
+			return false;
+		}
+		
+		if (txtQtde.getText().contains(".") && !(unidadeMedida == UnidadeDeMedida.Kg)) {
+			JOptionPane.showMessageDialog(contentPane,
+					"Apenas a unid. medida KG aceita valor com vírgula.");
 			return false;
 		}
 		return true;
@@ -399,22 +405,11 @@ public class TelaRegistroDeEntrada extends JFrame {
 		return true;
 	}
 
-	private boolean validarCamposObrigatorios() {
+	private boolean validarProduto() {
 		String produto = (String) cbProdutos.getSelectedItem();
-		Fornecedor fornecedor = (Fornecedor) cbFornecedores.getSelectedItem();
-		UnidadeDeMedida unidadeMedida = (UnidadeDeMedida) cbUnidadeMedida.getSelectedItem();
-		double quantidade;
-		BigDecimal preco;
-		try {
-			quantidade = Double.parseDouble(txtQtde.getText());
-			preco = new BigDecimal(txtPreco.getText());
-		} catch (NumberFormatException ex) {
-			return false;
-		}
 
-		if ("Selecione...".equals(produto) || fornecedor == null || unidadeMedida == null || quantidade <= 0
-				|| preco.compareTo(BigDecimal.ZERO) <= 0) {
-			JOptionPane.showMessageDialog(contentPane, "Preencha todos os campos obrigatórios.");
+		if ("Selecione...".equals(produto)) {
+			JOptionPane.showMessageDialog(contentPane, "Selecione um produto válido.");
 			return false;
 		}
 		return true;
@@ -512,7 +507,6 @@ public class TelaRegistroDeEntrada extends JFrame {
 	}
 
 	private void atualizarTotal(BigDecimal total) {
-		lblTotal.setText("Total: " + total);
 		lblTotal.setText("Total: R$" + total);
 	}
 
