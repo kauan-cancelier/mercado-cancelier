@@ -236,6 +236,7 @@ public class TelaRegistroDeEntrada extends JFrame {
 						model.removerEntrada(selectedRow);
 						totalGeral = model.calcularTotal();
 						lblTotal.setText("Total: " + totalGeral);
+						lblTotal.setText("Total: R$" + totalGeral);
 					}
 				} else {
 					JOptionPane.showMessageDialog(contentPane, "Selecione uma linha para excluir.");
@@ -512,6 +513,7 @@ public class TelaRegistroDeEntrada extends JFrame {
 
 	private void atualizarTotal(BigDecimal total) {
 		lblTotal.setText("Total: " + total);
+		lblTotal.setText("Total: R$" + total);
 	}
 
 }
