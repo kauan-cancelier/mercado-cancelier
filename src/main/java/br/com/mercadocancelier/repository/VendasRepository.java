@@ -22,9 +22,14 @@ public interface VendasRepository extends JpaRepository<Venda, Integer>{
 			+ "FROM Venda v "
 			+ "WHERE (v.dataDeVenda >= :desde) "
 			+ "AND (v.dataDeVenda <= :ate) "
-			+ "ORDER BY v.dataDeVenda")
+			+ "ORDER BY v.dataDeVenda DESC")
 	public List<Venda> listar(
 			@Param("desde") LocalDateTime desde,
 			@Param("ate") LocalDateTime ate);
+	
+	@Query(value = "SELECT v "
+			+ "FROM Venda v "
+			+ "ORDER BY v.dataDeVenda DESC")
+	public List<Venda> listarTodas();
 
 }

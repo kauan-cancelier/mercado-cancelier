@@ -26,7 +26,7 @@ public class VendaServiceImpl implements VendaService {
 
 	@Override
 	public List<Venda> listarTodas() {
-		return vendasRepository.findAll();
+		return vendasRepository.listarTodas();
 	}
 
 	@Override
