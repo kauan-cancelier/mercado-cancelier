@@ -1,13 +1,12 @@
 package br.com.mercadocancelier.views;
 
+import java.awt.BorderLayout;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
-import javax.swing.GroupLayout;
-import javax.swing.GroupLayout.Alignment;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -34,7 +33,6 @@ public class TelaPrincipal extends JFrame {
 	public TelaPrincipal() {
 		setTitle("Mercado Cancelier");
 
-		setResizable(false);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 1366, 768);
 
@@ -42,21 +40,11 @@ public class TelaPrincipal extends JFrame {
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 
 		setContentPane(contentPane);
+		contentPane.setLayout(new BorderLayout(0, 0));
 
 		hourLabel = new JLabel("Hora: ");
 		hourLabel.setFont(new Font("Calibri Light", Font.PLAIN, 15));
-		GroupLayout gl_contentPane = new GroupLayout(contentPane);
-		gl_contentPane.setHorizontalGroup(
-			gl_contentPane.createParallelGroup(Alignment.LEADING)
-				.addComponent(hourLabel, GroupLayout.PREFERRED_SIZE, 1356, GroupLayout.PREFERRED_SIZE)
-		);
-		gl_contentPane.setVerticalGroup(
-			gl_contentPane.createParallelGroup(Alignment.LEADING)
-				.addGroup(gl_contentPane.createSequentialGroup()
-					.addGap(703)
-					.addComponent(hourLabel))
-		);
-		contentPane.setLayout(gl_contentPane);
+		contentPane.add(hourLabel, BorderLayout.SOUTH);
 
 		Timer timer = new Timer(1000, new ActionListener() {
 			public void actionPerformed(ActionEvent e) {

@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.GridLayout;
 import java.awt.SystemColor;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -28,8 +29,8 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
-import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.ListSelectionModel;
+import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
@@ -64,21 +65,17 @@ public class TelaDeVenda extends JFrame {
 
 	private JTextField txtTotalRecebido;
 
-	private JTable tbItensVenda;
+	private JLabel lblNomeDoProduto;
 
-	private JLabel labelNomeDoProduto;
+	private JLabel lblValorUnitario;
 
-	private JLabel labelValorUnitario;
+	private JLabel lblTotal;
 
-	private JLabel labelTotalDoItem;
-
-	private JLabel labelTroco;
-
-	private JLabel labelSubtotal;
+	private JLabel lblTroco;
 
 	private List<ItemVenda> itensVenda = new ArrayList<ItemVenda>();
 
-	private JComboBox<TipoDePagamento> cbxFormaDePagamento;
+	private JComboBox<TipoDePagamento> cbxTipoDePagamento;
 
 	@Autowired
 	private VendaService vendaService;
@@ -95,11 +92,10 @@ public class TelaDeVenda extends JFrame {
 	@Autowired
 	private MensagemDeSucesso mensagemDeSucesso;
 
-	public TelaDeVenda() {
-		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-		setResizable(false);
-		setTitle("Mercado Cancelier - venda");
+	private JTable tbItensVenda;
 
+	public TelaDeVenda() {
+		setLocationRelativeTo(null);
 		addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowClosing(WindowEvent e) {
@@ -107,277 +103,42 @@ public class TelaDeVenda extends JFrame {
 						"Atenção! ", JOptionPane.YES_NO_OPTION);
 
 				if (op == 0) {
+					itensVenda.clear();
+					setLabels(null);
 					dispose();
 				}
 			}
 		});
-
 		ItensVendaTableModel model = new ItensVendaTableModel();
-		this.tbItensVenda = new JTable(model);
-		tbItensVenda.setForeground(Color.BLACK);
-		tbItensVenda.setFont(new Font("Dialog", Font.BOLD, 14));
-		tbItensVenda.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		tbItensVenda.getTableHeader().setOpaque(false);
-		tbItensVenda.getTableHeader().setBackground(SystemColor.activeCaption);
-		tbItensVenda.getTableHeader().setForeground(Color.WHITE);
-		tbItensVenda.getTableHeader().setReorderingAllowed(false);
-		tbItensVenda.getTableHeader().setResizingAllowed(false);
-		tbItensVenda.getTableHeader().setPreferredSize(new Dimension(tbItensVenda.getTableHeader().getWidth(), 50));
 
-		setBounds(0, 0, 1366, 768);
-		setLocationRelativeTo(null);
-
+		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		setBounds(100, 100, 1366, 768);
 		contentPane = new JPanel();
-		contentPane.setBorder(new EmptyBorder(0, 0, 0, 0));
+		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 
 		setContentPane(contentPane);
-
-		JPanel panelVenda = new JPanel();
-		panelVenda.setBackground(SystemColor.activeCaption);
-		panelVenda.setBorder(new LineBorder(new Color(0, 0, 0)));
-
-		JPanel panelCodigo = new JPanel();
-		panelCodigo.setBorder(new TitledBorder(new LineBorder(new Color(0, 0, 0)), "C\u00F3digo", TitledBorder.LEADING,
-				TitledBorder.TOP, null, new Color(51, 51, 51)));
-
-		JPanel panelNomeDoProduto = new JPanel();
-		panelNomeDoProduto.setBorder(new TitledBorder(new LineBorder(new Color(0, 0, 0)), "Nome do produto",
-				TitledBorder.LEADING, TitledBorder.TOP, null, null));
-
-		labelNomeDoProduto = new JLabel("");
-		labelNomeDoProduto.setForeground(SystemColor.activeCaption);
-		labelNomeDoProduto.setFont(new Font("Dialog", Font.BOLD, 20));
-		GroupLayout gl_panelNomeDoProduto = new GroupLayout(panelNomeDoProduto);
-		gl_panelNomeDoProduto
-				.setHorizontalGroup(gl_panelNomeDoProduto.createParallelGroup(Alignment.LEADING)
-						.addGroup(Alignment.TRAILING, gl_panelNomeDoProduto.createSequentialGroup().addContainerGap()
-								.addComponent(labelNomeDoProduto, GroupLayout.DEFAULT_SIZE, 353, Short.MAX_VALUE)
-								.addContainerGap()));
-		gl_panelNomeDoProduto.setVerticalGroup(
-				gl_panelNomeDoProduto.createParallelGroup(Alignment.LEADING).addGroup(Alignment.TRAILING,
-						gl_panelNomeDoProduto.createSequentialGroup().addContainerGap()
-								.addComponent(labelNomeDoProduto, GroupLayout.DEFAULT_SIZE, 48, Short.MAX_VALUE)
-								.addContainerGap()));
-		panelNomeDoProduto.setLayout(gl_panelNomeDoProduto);
-
-		JPanel panelValorCodigo = new JPanel();
-		panelValorCodigo.setBorder(new TitledBorder(new LineBorder(new Color(0, 0, 0)), "Valor unit\u00E1rio",
-				TitledBorder.LEADING, TitledBorder.TOP, null, null));
-
-		labelValorUnitario = new JLabel("");
-		labelValorUnitario.setForeground(SystemColor.desktop);
-		labelValorUnitario.setFont(new Font("Dialog", Font.BOLD, 20));
-		GroupLayout gl_panelValorCodigo = new GroupLayout(panelValorCodigo);
-		gl_panelValorCodigo.setHorizontalGroup(gl_panelValorCodigo.createParallelGroup(Alignment.LEADING)
-				.addGroup(gl_panelValorCodigo.createSequentialGroup().addContainerGap()
-						.addComponent(labelValorUnitario, GroupLayout.DEFAULT_SIZE, 353, Short.MAX_VALUE)
-						.addContainerGap()));
-		gl_panelValorCodigo.setVerticalGroup(
-				gl_panelValorCodigo.createParallelGroup(Alignment.LEADING).addGroup(Alignment.TRAILING,
-						gl_panelValorCodigo.createSequentialGroup().addContainerGap()
-								.addComponent(labelValorUnitario, GroupLayout.DEFAULT_SIZE, 48, Short.MAX_VALUE)
-								.addContainerGap()));
-		panelValorCodigo.setLayout(gl_panelValorCodigo);
-
-		JPanel panelTotalDoItem = new JPanel();
-		panelTotalDoItem.setBorder(new TitledBorder(new LineBorder(new Color(0, 0, 0)), "Total do item",
-				TitledBorder.LEADING, TitledBorder.TOP, null, new Color(51, 51, 51)));
-
-		labelTotalDoItem = new JLabel("");
-		labelTotalDoItem.setForeground(Color.RED);
-		labelTotalDoItem.setFont(new Font("Dialog", Font.BOLD, 20));
-		GroupLayout gl_panelTotalDoItem = new GroupLayout(panelTotalDoItem);
-		gl_panelTotalDoItem.setHorizontalGroup(gl_panelTotalDoItem.createParallelGroup(Alignment.LEADING)
-				.addGroup(gl_panelTotalDoItem.createSequentialGroup().addContainerGap()
-						.addComponent(labelTotalDoItem, GroupLayout.DEFAULT_SIZE, 353, Short.MAX_VALUE)
-						.addContainerGap()));
-		gl_panelTotalDoItem.setVerticalGroup(
-				gl_panelTotalDoItem.createParallelGroup(Alignment.LEADING).addGroup(Alignment.TRAILING,
-						gl_panelTotalDoItem.createSequentialGroup().addContainerGap()
-								.addComponent(labelTotalDoItem, GroupLayout.DEFAULT_SIZE, 48, Short.MAX_VALUE)
-								.addContainerGap()));
-		panelTotalDoItem.setLayout(gl_panelTotalDoItem);
-
-		JPanel panelMeioDePagamento = new JPanel();
-		panelMeioDePagamento.setBorder(new TitledBorder(new LineBorder(new Color(0, 0, 0)), "Forma de pagamento",
-				TitledBorder.LEADING, TitledBorder.TOP, null, null));
-
-		cbxFormaDePagamento = new JComboBox<TipoDePagamento>();
-		cbxFormaDePagamento.setModel(new DefaultComboBoxModel<TipoDePagamento>(TipoDePagamento.values()));
-		cbxFormaDePagamento.setSelectedIndex(-1);
-
-		GroupLayout gl_panelMeioDePagamento = new GroupLayout(panelMeioDePagamento);
-		gl_panelMeioDePagamento.setHorizontalGroup(gl_panelMeioDePagamento.createParallelGroup(Alignment.LEADING)
-				.addGroup(gl_panelMeioDePagamento.createSequentialGroup().addContainerGap()
-						.addComponent(cbxFormaDePagamento, 0, 373, Short.MAX_VALUE).addContainerGap()));
-		gl_panelMeioDePagamento.setVerticalGroup(gl_panelMeioDePagamento.createParallelGroup(Alignment.LEADING)
-				.addComponent(cbxFormaDePagamento, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 55, Short.MAX_VALUE));
-		panelMeioDePagamento.setLayout(gl_panelMeioDePagamento);
-
-		JPanel panelSubTotal = new JPanel();
-		panelSubTotal.setBorder(new TitledBorder(new LineBorder(new Color(0, 0, 0)), "Subtotal", TitledBorder.LEADING,
-				TitledBorder.TOP, null, null));
-
-		JPanel panelTroco = new JPanel();
-		panelTroco.setBorder(new TitledBorder(new LineBorder(new Color(0, 0, 0)), "Troco", TitledBorder.LEADING,
-				TitledBorder.TOP, null, new Color(51, 51, 51)));
-
-		JPanel panelTotalRecebido = new JPanel();
-		panelTotalRecebido.setBorder(new TitledBorder(new LineBorder(new Color(0, 0, 0)), "Total recebido",
-				TitledBorder.LEADING, TitledBorder.TOP, null, new Color(51, 51, 51)));
-
-		txtTotalRecebido = new JTextField();
-		txtTotalRecebido.setColumns(10);
-		txtTotalRecebido.addKeyListener(new KeyAdapter() {
-			@Override
-			public void keyPressed(KeyEvent e) {
-				if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-					exibirTroco();
-				}
-			}
-		});
-
-		GroupLayout gl_panelTotalRecebido = new GroupLayout(panelTotalRecebido);
-		gl_panelTotalRecebido.setHorizontalGroup(gl_panelTotalRecebido.createParallelGroup(Alignment.LEADING)
-				.addComponent(txtTotalRecebido, GroupLayout.DEFAULT_SIZE, 431, Short.MAX_VALUE));
-		gl_panelTotalRecebido.setVerticalGroup(gl_panelTotalRecebido.createParallelGroup(Alignment.LEADING)
-				.addComponent(txtTotalRecebido, GroupLayout.DEFAULT_SIZE, 48, Short.MAX_VALUE));
-		panelTotalRecebido.setLayout(gl_panelTotalRecebido);
-
-		JScrollPane scrollPane = new JScrollPane(tbItensVenda);
-		tbItensVenda.getTableHeader().setPreferredSize(new Dimension(tbItensVenda.getTableHeader().getWidth(), 50));
-		tbItensVenda.setRowHeight(40);
-		DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
-		centerRenderer.setHorizontalAlignment(JLabel.CENTER);
-		tbItensVenda.setDefaultRenderer(Object.class, centerRenderer);
+		contentPane.setLayout(new BorderLayout(20, 20));
 
 		JPanel panel = new JPanel();
 		panel.setBackground(SystemColor.activeCaption);
-		panel.setBorder(new TitledBorder(new LineBorder(new Color(0, 0, 0)), "A\u00E7\u00F5es", TitledBorder.LEADING,
-				TitledBorder.TOP, null, new Color(255, 255, 255)));
+		contentPane.add(panel, BorderLayout.NORTH);
+		panel.setLayout(new BorderLayout(10, 20));
 
-		GroupLayout gl_contentPane = new GroupLayout(contentPane);
-		gl_contentPane.setHorizontalGroup(gl_contentPane.createParallelGroup(Alignment.LEADING).addGroup(gl_contentPane
-				.createSequentialGroup().addContainerGap()
-				.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
-						.addComponent(panelVenda, GroupLayout.DEFAULT_SIZE, 1332, Short.MAX_VALUE)
-						.addGroup(gl_contentPane.createSequentialGroup().addGroup(gl_contentPane
-								.createParallelGroup(Alignment.LEADING, false)
-								.addComponent(panelCodigo, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE,
-										Short.MAX_VALUE)
-								.addComponent(panelNomeDoProduto, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE,
-										Short.MAX_VALUE)
-								.addComponent(panelValorCodigo, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE,
-										Short.MAX_VALUE)
-								.addComponent(panelTotalDoItem, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE,
-										Short.MAX_VALUE)
-								.addComponent(panelMeioDePagamento, GroupLayout.DEFAULT_SIZE, 387, Short.MAX_VALUE)
-								.addComponent(panel, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE,
-										Short.MAX_VALUE))
-								.addPreferredGap(ComponentPlacement.RELATED, 25, Short.MAX_VALUE)
-								.addGroup(gl_contentPane.createParallelGroup(Alignment.TRAILING, false)
-										.addComponent(panelSubTotal, 0, 0, Short.MAX_VALUE)
-										.addGroup(gl_contentPane.createSequentialGroup()
-												.addComponent(panelTotalRecebido, GroupLayout.PREFERRED_SIZE, 441,
-														GroupLayout.PREFERRED_SIZE)
-												.addGap(18).addComponent(panelTroco, GroupLayout.PREFERRED_SIZE, 441,
-														GroupLayout.PREFERRED_SIZE))
-										.addComponent(scrollPane))))
-				.addContainerGap()));
-		gl_contentPane.setVerticalGroup(gl_contentPane.createParallelGroup(Alignment.TRAILING).addGroup(gl_contentPane
-				.createSequentialGroup()
-				.addComponent(panelVenda, GroupLayout.PREFERRED_SIZE, 76, GroupLayout.PREFERRED_SIZE)
-				.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING).addGroup(gl_contentPane
-						.createSequentialGroup().addGap(12)
-						.addComponent(panelCodigo, GroupLayout.PREFERRED_SIZE, 94, GroupLayout.PREFERRED_SIZE)
-						.addPreferredGap(ComponentPlacement.UNRELATED)
-						.addComponent(panelNomeDoProduto, GroupLayout.PREFERRED_SIZE, 94, GroupLayout.PREFERRED_SIZE)
-						.addPreferredGap(ComponentPlacement.RELATED)
-						.addComponent(panelValorCodigo, GroupLayout.PREFERRED_SIZE, 94, GroupLayout.PREFERRED_SIZE)
-						.addPreferredGap(ComponentPlacement.RELATED)
-						.addComponent(panelTotalDoItem, GroupLayout.PREFERRED_SIZE, 94, GroupLayout.PREFERRED_SIZE))
-						.addGroup(gl_contentPane.createSequentialGroup().addGap(18)
-								.addComponent(scrollPane, GroupLayout.PREFERRED_SIZE, 417, GroupLayout.PREFERRED_SIZE)))
-				.addGap(31)
-				.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
-						.addComponent(panelSubTotal, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE,
-								Short.MAX_VALUE)
-						.addComponent(panelMeioDePagamento, GroupLayout.PREFERRED_SIZE, 77, GroupLayout.PREFERRED_SIZE))
-				.addPreferredGap(ComponentPlacement.RELATED)
-				.addGroup(gl_contentPane.createParallelGroup(Alignment.TRAILING)
-						.addComponent(panel, Alignment.LEADING, GroupLayout.PREFERRED_SIZE, 82, Short.MAX_VALUE)
-						.addComponent(panelTotalRecebido, GroupLayout.DEFAULT_SIZE, 82, Short.MAX_VALUE)
-						.addComponent(panelTroco, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 82, Short.MAX_VALUE))
-				.addContainerGap()));
-		panelVenda.setLayout(new BorderLayout(0, 0));
+		JLabel lblVenda = new JLabel("Venda");
+		lblVenda.setFont(new Font("Dialog", Font.PLAIN, 40));
+		lblVenda.setHorizontalAlignment(SwingConstants.CENTER);
+		lblVenda.setForeground(new Color(255, 255, 255));
+		panel.add(lblVenda, BorderLayout.CENTER);
 
-		JLabel lblNewLabel = new JLabel("Venda");
-		lblNewLabel.setBackground(Color.BLUE);
-		lblNewLabel.setForeground(Color.WHITE);
-		lblNewLabel.setFont(new Font("Dialog", Font.BOLD, 30));
-		lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
-		panelVenda.add(lblNewLabel, BorderLayout.CENTER);
+		JPanel panelInfos = new JPanel();
+		contentPane.add(panelInfos, BorderLayout.WEST);
+		panelInfos.setLayout(new GridLayout(6, 1, 10, 10));
 
-		JButton btnSalvar = new JButton("Salvar");
-		btnSalvar.setBackground(Color.WHITE);
-		btnSalvar.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				if (itensVenda.isEmpty()) {
-					mensagemDeAviso.abrirTela("Nenhum produto adicionado a venda. ");
-				} else {
-					salvar();
-				}
-			}
-		});
-
-		JButton btnExcluir = new JButton("Excluir");
-		btnExcluir.setBackground(Color.WHITE);
-		btnExcluir.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				removerProduto();
-			}
-		});
-		GroupLayout gl_panel = new GroupLayout(panel);
-		gl_panel.setHorizontalGroup(gl_panel.createParallelGroup(Alignment.LEADING).addGroup(Alignment.TRAILING,
-				gl_panel.createSequentialGroup().addContainerGap()
-						.addComponent(btnSalvar, GroupLayout.PREFERRED_SIZE, 106, GroupLayout.PREFERRED_SIZE)
-						.addPreferredGap(ComponentPlacement.RELATED, 151, Short.MAX_VALUE)
-						.addComponent(btnExcluir, GroupLayout.PREFERRED_SIZE, 106, GroupLayout.PREFERRED_SIZE)
-						.addContainerGap()));
-		gl_panel.setVerticalGroup(gl_panel.createParallelGroup(Alignment.LEADING).addGroup(Alignment.TRAILING,
-				gl_panel.createSequentialGroup().addContainerGap(24, Short.MAX_VALUE)
-						.addGroup(gl_panel.createParallelGroup(Alignment.BASELINE)
-								.addComponent(btnExcluir, GroupLayout.PREFERRED_SIZE, 43, GroupLayout.PREFERRED_SIZE)
-								.addComponent(btnSalvar, GroupLayout.PREFERRED_SIZE, 43, GroupLayout.PREFERRED_SIZE))
-						.addContainerGap()));
-		panel.setLayout(gl_panel);
-
-		labelTroco = new JLabel("");
-		labelTroco.setForeground(new Color(0, 128, 0));
-		labelTroco.setFont(new Font("Dialog", Font.BOLD, 20));
-		GroupLayout gl_panelTroco = new GroupLayout(panelTroco);
-		gl_panelTroco.setHorizontalGroup(gl_panelTroco.createParallelGroup(Alignment.LEADING)
-				.addGroup(gl_panelTroco.createSequentialGroup().addContainerGap()
-						.addComponent(labelTroco, GroupLayout.DEFAULT_SIZE, 419, Short.MAX_VALUE).addContainerGap()));
-		gl_panelTroco.setVerticalGroup(
-				gl_panelTroco.createParallelGroup(Alignment.LEADING).addGroup(gl_panelTroco.createSequentialGroup()
-						.addComponent(labelTroco, GroupLayout.DEFAULT_SIZE, 36, Short.MAX_VALUE).addContainerGap()));
-		panelTroco.setLayout(gl_panelTroco);
-
-		labelSubtotal = new JLabel("");
-		labelSubtotal.setForeground(SystemColor.activeCaption);
-		labelSubtotal.setFont(new Font("Dialog", Font.BOLD, 20));
-
-		GroupLayout gl_panelSubTotal = new GroupLayout(panelSubTotal);
-		gl_panelSubTotal
-				.setHorizontalGroup(gl_panelSubTotal.createParallelGroup(Alignment.LEADING).addGroup(Alignment.TRAILING,
-						gl_panelSubTotal.createSequentialGroup().addContainerGap()
-								.addComponent(labelSubtotal, GroupLayout.DEFAULT_SIZE, 876, Short.MAX_VALUE)
-								.addContainerGap()));
-		gl_panelSubTotal.setVerticalGroup(gl_panelSubTotal.createParallelGroup(Alignment.LEADING)
-				.addGroup(Alignment.TRAILING, gl_panelSubTotal.createSequentialGroup().addContainerGap()
-						.addComponent(labelSubtotal, GroupLayout.DEFAULT_SIZE, 45, Short.MAX_VALUE)));
-		panelSubTotal.setLayout(gl_panelSubTotal);
+		JPanel panelCodigo = new JPanel();
+		panelCodigo.setBorder(new TitledBorder(new LineBorder(new Color(0, 0, 0)), "C\u00F3digo", TitledBorder.LEADING,
+				TitledBorder.TOP, null, null));
+		panelInfos.add(panelCodigo);
+		panelCodigo.setLayout(new BorderLayout(0, 0));
 
 		txtCodigo = new JTextField();
 		txtCodigo.addKeyListener(new KeyAdapter() {
@@ -388,74 +149,216 @@ public class TelaDeVenda extends JFrame {
 				}
 			}
 		});
-		txtCodigo.setColumns(10);
+		txtCodigo.setFont(new Font("Dialog", Font.PLAIN, 25));
+		panelCodigo.add(txtCodigo, BorderLayout.CENTER);
+		txtCodigo.setColumns(20);
 
-		JButton btnPesquisar = new JButton("Pesquisar");
-		GroupLayout gl_panelCodigo = new GroupLayout(panelCodigo);
-		gl_panelCodigo
-				.setHorizontalGroup(gl_panelCodigo.createParallelGroup(Alignment.TRAILING).addGroup(Alignment.LEADING,
-						gl_panelCodigo.createSequentialGroup().addContainerGap()
-								.addComponent(txtCodigo, GroupLayout.PREFERRED_SIZE, 258, GroupLayout.PREFERRED_SIZE)
-								.addPreferredGap(ComponentPlacement.RELATED)
-								.addComponent(btnPesquisar, GroupLayout.PREFERRED_SIZE, 109, GroupLayout.PREFERRED_SIZE)
-								.addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)));
-		gl_panelCodigo.setVerticalGroup(gl_panelCodigo.createParallelGroup(Alignment.LEADING).addGroup(gl_panelCodigo
-				.createSequentialGroup().addContainerGap()
-				.addGroup(gl_panelCodigo.createParallelGroup(Alignment.TRAILING)
-						.addComponent(btnPesquisar, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 44, Short.MAX_VALUE)
-						.addComponent(txtCodigo, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 44, Short.MAX_VALUE))
-				.addGap(16)));
-		panelCodigo.setLayout(gl_panelCodigo);
-		contentPane.setLayout(gl_contentPane);
+		JPanel panelNomeDoProduto = new JPanel();
+		panelInfos.add(panelNomeDoProduto);
+		panelNomeDoProduto.setBorder(new TitledBorder(new LineBorder(new Color(0, 0, 0)), "Nome do produto",
+				TitledBorder.LEADING, TitledBorder.TOP, null, new Color(51, 51, 51)));
+		panelNomeDoProduto.setLayout(new BorderLayout(0, 0));
+
+		lblNomeDoProduto = new JLabel("");
+		lblNomeDoProduto.setForeground(Color.RED);
+		lblNomeDoProduto.setFont(new Font("Dialog", Font.PLAIN, 25));
+		panelNomeDoProduto.add(lblNomeDoProduto, BorderLayout.CENTER);
+
+		JPanel panelValorUnitario = new JPanel();
+		panelValorUnitario.setBorder(new TitledBorder(new LineBorder(new Color(0, 0, 0)), "Valor Unit\u00E1rio",
+				TitledBorder.LEADING, TitledBorder.TOP, null, new Color(51, 51, 51)));
+		panelInfos.add(panelValorUnitario);
+		panelValorUnitario.setLayout(new BorderLayout(0, 0));
+
+		lblValorUnitario = new JLabel("R$ 0,00");
+		lblValorUnitario.setForeground(SystemColor.activeCaption);
+		lblValorUnitario.setFont(new Font("Dialog", Font.PLAIN, 25));
+		panelValorUnitario.add(lblValorUnitario, BorderLayout.CENTER);
+
+		JPanel panelTotal = new JPanel();
+		panelTotal.setBorder(new TitledBorder(new LineBorder(new Color(0, 0, 0)), "Total da venda",
+				TitledBorder.LEADING, TitledBorder.TOP, null, new Color(51, 51, 51)));
+		panelInfos.add(panelTotal);
+		panelTotal.setLayout(new BorderLayout(0, 0));
+
+		lblTotal = new JLabel("R$ 0,00");
+		lblTotal.setForeground(SystemColor.desktop);
+		lblTotal.setFont(new Font("Dialog", Font.PLAIN, 25));
+		panelTotal.add(lblTotal, BorderLayout.CENTER);
+
+		JPanel panelTipoDePagamento = new JPanel();
+		panelTipoDePagamento.setBorder(new TitledBorder(new LineBorder(new Color(0, 0, 0)), "Forma de pagamento",
+				TitledBorder.LEADING, TitledBorder.TOP, null, new Color(51, 51, 51)));
+		panelInfos.add(panelTipoDePagamento);
+		panelTipoDePagamento.setLayout(new BorderLayout(0, 0));
+
+		cbxTipoDePagamento = new JComboBox<TipoDePagamento>();
+		cbxTipoDePagamento.setModel(new DefaultComboBoxModel<TipoDePagamento>(TipoDePagamento.values()));
+		cbxTipoDePagamento.setSelectedIndex(-1);
+		panelTipoDePagamento.add(cbxTipoDePagamento, BorderLayout.CENTER);
+
+		JPanel panelAcoes = new JPanel();
+		panelAcoes.setBorder(new TitledBorder(new LineBorder(new Color(0, 0, 0)), "A\u00E7\u00F5es",
+				TitledBorder.LEADING, TitledBorder.TOP, null, new Color(255, 255, 255)));
+		panelAcoes.setBackground(SystemColor.activeCaption);
+		panelInfos.add(panelAcoes);
+
+		JButton btnSalvar = new JButton("Salvar");
+		btnSalvar.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				if (itensVenda.isEmpty()) {
+					mensagemDeAviso.abrirTela("Nenhum produto adicionado a venda. ");
+				} else {
+					salvar();
+				}
+			}
+		});
+		btnSalvar.setBackground(Color.WHITE);
+
+		JButton btnExcluir = new JButton("Excluir");
+		btnExcluir.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				removerProduto();
+			}
+		});
+		btnExcluir.setBackground(Color.WHITE);
+		GroupLayout gl_panelAcoes = new GroupLayout(panelAcoes);
+		gl_panelAcoes.setAutoCreateGaps(true);
+		gl_panelAcoes.setAutoCreateContainerGaps(true);
+		gl_panelAcoes.setHorizontalGroup(
+				gl_panelAcoes.createParallelGroup(Alignment.TRAILING).addGap(0, 407, Short.MAX_VALUE)
+						.addGroup(gl_panelAcoes.createSequentialGroup().addContainerGap()
+								.addComponent(btnSalvar, GroupLayout.PREFERRED_SIZE, 106, GroupLayout.PREFERRED_SIZE)
+								.addPreferredGap(ComponentPlacement.RELATED, 161, Short.MAX_VALUE)
+								.addComponent(btnExcluir, GroupLayout.PREFERRED_SIZE, 106, GroupLayout.PREFERRED_SIZE)
+								.addContainerGap()));
+		gl_panelAcoes.setVerticalGroup(gl_panelAcoes.createParallelGroup(Alignment.TRAILING)
+				.addGap(0, 101, Short.MAX_VALUE)
+				.addGroup(gl_panelAcoes.createSequentialGroup().addContainerGap(24, Short.MAX_VALUE)
+						.addGroup(gl_panelAcoes.createParallelGroup(Alignment.BASELINE)
+								.addComponent(btnExcluir, GroupLayout.PREFERRED_SIZE, 43, GroupLayout.PREFERRED_SIZE)
+								.addComponent(btnSalvar, GroupLayout.PREFERRED_SIZE, 43, GroupLayout.PREFERRED_SIZE))
+						.addContainerGap()));
+		panelAcoes.setLayout(gl_panelAcoes);
+
+		JPanel panelScroll = new JPanel();
+		panelScroll.setBorder(new TitledBorder(new LineBorder(new Color(0, 0, 0)), "Itens", TitledBorder.LEADING,
+				TitledBorder.TOP, null, null));
+		panelScroll.setBackground(new Color(255, 255, 255));
+		contentPane.add(panelScroll, BorderLayout.CENTER);
+		panelScroll.setLayout(new BorderLayout(50, 10));
+
+		this.tbItensVenda = new JTable(model);
+		tbItensVenda.setForeground(Color.BLACK);
+		tbItensVenda.setFont(new Font("Dialog", Font.BOLD, 14));
+		tbItensVenda.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		tbItensVenda.getTableHeader().setOpaque(false);
+		tbItensVenda.getTableHeader().setBackground(SystemColor.activeCaption);
+		tbItensVenda.getTableHeader().setForeground(Color.WHITE);
+		tbItensVenda.getTableHeader().setReorderingAllowed(false);
+		tbItensVenda.getTableHeader().setResizingAllowed(false);
+		tbItensVenda.getTableHeader().setPreferredSize(new Dimension(tbItensVenda.getTableHeader().getWidth(), 50));
+		
+		JScrollPane scrollPane = new JScrollPane(tbItensVenda);
+		DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+		centerRenderer.setHorizontalAlignment(JLabel.CENTER);
+		tbItensVenda.getTableHeader().setPreferredSize(new Dimension(tbItensVenda.getTableHeader().getWidth(), 50));
+		tbItensVenda.setRowHeight(40);
+		tbItensVenda.setDefaultRenderer(Object.class, centerRenderer);
+		panelScroll.add(scrollPane, BorderLayout.CENTER);
+
+		JPanel panelInferior = new JPanel();
+		panelInferior.setBackground(Color.WHITE);
+		panelScroll.add(panelInferior, BorderLayout.SOUTH);
+		panelInferior.setLayout(new GridLayout(0, 2, 10, 0));
+
+		JPanel panelTotalRecebido = new JPanel();
+		panelTotalRecebido.setBorder(
+				new TitledBorder(null, "Total recebido", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+		panelInferior.add(panelTotalRecebido);
+		panelTotalRecebido.setLayout(new BorderLayout(0, 0));
+
+		txtTotalRecebido = new JTextField();
+		txtTotalRecebido.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyPressed(KeyEvent e) {
+				if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+					exibirTroco();
+				}
+			}
+		});
+		txtTotalRecebido.setFont(new Font("Dialog", Font.PLAIN, 25));
+		panelTotalRecebido.add(txtTotalRecebido);
+		txtTotalRecebido.setColumns(20);
+
+		JPanel panelTroco = new JPanel();
+		panelTroco.setBorder(new TitledBorder(null, "Troco", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+		panelInferior.add(panelTroco);
+		panelTroco.setLayout(new BorderLayout(0, 0));
+
+		lblTroco = new JLabel("R$ 0,00");
+		lblTroco.setFont(new Font("Dialog", Font.PLAIN, 25));
+		panelTroco.add(lblTroco, BorderLayout.NORTH);
 	}
 
 	private void adicionarItemVenda() {
 		if (txtCodigo.getText().length() >= 3) {
 			try {
 				Produto produto = produtoService.buscarPor(txtCodigo.getText());
-
-				if (produto == null) {
-					mensagemDeAviso.abrirTela("Nenhum produto encontrado para o código: " + txtCodigo.getText());
-				} else {
+				if (produto != null) {
 					int quantidade = 1;
-
 					boolean produtoJaNaLista = false;
-					
+
 					if (produto.getUnidadeDeMedida() != UnidadeDeMedida.Un) {
-						Double peso = Conversor.stringParaNumero(JOptionPane.showInputDialog(contentPane, "Digite o peso do " + produto.getNome()));
-						ItemVenda itemvenda = new ItemVenda();
-						itemvenda.setProduto(produto);
-						itemvenda.setPrecoTotal(produto.getPreco().multiply(BigDecimal.valueOf(peso)));
-						itemvenda.setQuantidade(BigDecimal.valueOf(peso));
-						itensVenda.add(itemvenda);
+						adicionarItemDiferenteDeUnidade(produto);
 						produtoJaNaLista = true;
 					}
+					
 					for (ItemVenda item : itensVenda) {
 						if (item.getProduto().equals(produto) && produto.getUnidadeDeMedida() == UnidadeDeMedida.Un) {
-							item.setQuantidade(BigDecimal.valueOf(item.getQuantidade().doubleValue() + quantidade));
-							BigDecimal precoTotal = BigDecimal.valueOf(produto.getPreco().doubleValue() * item.getQuantidade().doubleValue());
-							item.setPrecoTotal(precoTotal);
+							adicionarQuantidadeProdutoExistente(item, produto, quantidade);
 							produtoJaNaLista = true;
 						}
 					}
-					
 
 					if (!produtoJaNaLista) {
-						ItemVenda itemVenda = new ItemVenda();
-						itemVenda.setProduto(produto);
-						itemVenda.setQuantidade(BigDecimal.valueOf(quantidade));
-						BigDecimal precoTotal = BigDecimal.valueOf(produto.getPreco().doubleValue() * quantidade);
-						itemVenda.setPrecoTotal(precoTotal);
-						itensVenda.add(itemVenda);
+						adicionarNovoItem(produto);
 					}
 
-					setLabels(itensVenda.get(itensVenda.size() -1));
+					setLabels(itensVenda.get(itensVenda.size() - 1));
 					carregarProdutoNaTabela(itensVenda);
+
+				} else {
+					mensagemDeAviso.abrirTela("Nenhum produto encontrado para o código: " + txtCodigo.getText());
 				}
 			} catch (Exception e) {
 				System.out.println("Erro ao adicionar item venda, motivo: " + e.getMessage());
 			}
 		}
+	}
+	
+	private void adicionarNovoItem(Produto produto) {
+		ItemVenda itemVenda = new ItemVenda();
+		itemVenda.setProduto(produto);
+		itemVenda.setQuantidade(BigDecimal.ONE);
+		itemVenda.setPrecoTotal(produto.getPreco());
+		itensVenda.add(itemVenda);
+	}
+	
+	private void adicionarQuantidadeProdutoExistente(ItemVenda item, Produto produto, int quantidade) {
+		item.setQuantidade(BigDecimal.valueOf(item.getQuantidade().doubleValue() + quantidade));
+		BigDecimal precoTotal = BigDecimal.valueOf(produto.getPreco().doubleValue() * item.getQuantidade().doubleValue());
+		item.setPrecoTotal(precoTotal);
+	}
+	
+	private void adicionarItemDiferenteDeUnidade(Produto produto) {
+		Double peso = Conversor.stringParaNumero(JOptionPane.showInputDialog(contentPane, "Digite o peso do " + produto.getNome()));
+		ItemVenda itemvenda = new ItemVenda();
+		itemvenda.setProduto(produto);
+		itemvenda.setPrecoTotal(produto.getPreco().multiply(BigDecimal.valueOf(peso)));
+		itemvenda.setQuantidade(BigDecimal.valueOf(peso));
+		itensVenda.add(itemvenda);
 	}
 
 	private void carregarProdutoNaTabela(List<ItemVenda> itensVenda) {
@@ -471,16 +374,15 @@ public class TelaDeVenda extends JFrame {
 
 	private void setLabels(ItemVenda itemVenda) {
 		if (itemVenda != null) {
-			labelNomeDoProduto.setText(itemVenda.getProduto().getNome());
-			labelValorUnitario.setText("R$ " + Conversor.numeroParaString(itemVenda.getProduto().getPreco().doubleValue()));
-			labelTotalDoItem.setText("R$ " + Conversor.numeroParaString(itemVenda.getPrecoTotal().doubleValue()));
-			labelSubtotal.setText("R$ " + Conversor.numeroParaString(calcularValorTotal().doubleValue()));
+			lblNomeDoProduto.setText(itemVenda.getProduto().getNome());
+			lblValorUnitario
+					.setText("R$ " + Conversor.numeroParaString(itemVenda.getProduto().getPreco().doubleValue()));
+			lblTotal.setText("R$ " + Conversor.numeroParaString(calcularValorTotal().doubleValue()));
 		} else {
-			labelNomeDoProduto.setText("");
-			labelValorUnitario.setText("R$ 0,00");
-			labelTotalDoItem.setText("R$ 0,00");
-			labelSubtotal.setText("R$ " + Conversor.numeroParaString(calcularValorTotal().doubleValue()));
-			labelTroco.setText("R$ 0,00");
+			lblNomeDoProduto.setText("");
+			lblValorUnitario.setText("R$ 0,00");
+			lblTotal.setText("R$ " + Conversor.numeroParaString(calcularValorTotal().doubleValue()));
+			lblTroco.setText("R$ 0,00");
 			txtCodigo.setText("");
 			txtTotalRecebido.setText("");
 		}
@@ -497,7 +399,7 @@ public class TelaDeVenda extends JFrame {
 	}
 
 	private void exibirTroco() {
-		labelTroco.setText("R$ " + Conversor.numeroParaString(calcularTroco().doubleValue()));
+		lblTroco.setText("R$ " + Conversor.numeroParaString(calcularTroco().doubleValue()));
 	}
 
 	private BigDecimal calcularTroco() {
@@ -541,42 +443,43 @@ public class TelaDeVenda extends JFrame {
 	private void processarRemocaoItemQuantidadeMaiorQueUm(ItemVenda itemSelecionado) {
 		double qtdeParaRemover = Double.parseDouble(JOptionPane.showInputDialog(contentPane,
 				"O item encontrado tem mais de uma quantidade! Deseja remover quantas?"));
-		
+
 		if (qtdeParaRemover == itemSelecionado.getQuantidade().doubleValue()) {
 			itensVenda.remove(tbItensVenda.getSelectedRow());
 			mensagemDeAviso.abrirTela("O Item '" + itemSelecionado.getProduto().getNome() + "' foi removido.");
-			
+
 		} else if (qtdeParaRemover > itemSelecionado.getQuantidade().doubleValue()) {
 			mensagemDeAviso.abrirTela("A quantidade de itens para remoção é maior do que a quantidade de itens do produto. ");
-			
-		} else if (qtdeParaRemover >= 0.1) {
+
+		} else if (qtdeParaRemover >= 0.1 ) {
 			itemSelecionado.setQuantidade(BigDecimal.valueOf(itemSelecionado.getQuantidade().doubleValue() - qtdeParaRemover));
 			BigDecimal novoPreco = calcularNovoPreco(itemSelecionado);
 			itemSelecionado.setPrecoTotal(novoPreco);
 			exibirMensagemRemocao(itemSelecionado, qtdeParaRemover);
-			
-		} 
+
+		}
 	}
-	
+
 	private BigDecimal calcularNovoPreco(ItemVenda itemSelecionado) {
 		return itemSelecionado.getProduto().getPreco().multiply(itemSelecionado.getQuantidade());
 	}
 
 	private void exibirMensagemRemocao(ItemVenda itemSelecionado, double qtdeParaRemover) {
-		String mensagem = qtdeParaRemover + " unidade(s) do produto: " + itemSelecionado.getProduto().getNome() + " foram removidas";
+		String mensagem = qtdeParaRemover + " unidade(s) do produto: " + itemSelecionado.getProduto().getNome()
+				+ " foram removidas";
 		mensagemDeAviso.abrirTela(mensagem);
 		tbItensVenda.updateUI();
 	}
 
 	private void salvar() {
-		if (cbxFormaDePagamento.getSelectedIndex() == -1) {
+		if (cbxTipoDePagamento.getSelectedIndex() == -1) {
 			mensagemDeAviso.abrirTela("A forma de pagamento é obrigatória");
 		} else {
 			Venda venda = new Venda();
 			venda.setDataDeVenda(LocalDateTime.now());
 			venda.setStatus(Status.A);
 			venda.setValorTotal(calcularValorTotal());
-			String tipoDePagamento = cbxFormaDePagamento.getSelectedItem().toString();
+			String tipoDePagamento = cbxTipoDePagamento.getSelectedItem().toString();
 			venda.setTipoDePagamento(TipoDePagamento.valueOf(tipoDePagamento));
 			Venda vendaSalva = vendaService.salvar(venda);
 

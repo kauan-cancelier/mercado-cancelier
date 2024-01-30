@@ -1,9 +1,13 @@
 package br.com.mercadocancelier.views.vendas;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.GridLayout;
 import java.awt.SystemColor;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.List;
 
 import javax.swing.JButton;
@@ -13,9 +17,13 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
+import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
+import javax.swing.border.LineBorder;
+import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableCellRenderer;
 
+import org.hibernate.validator.internal.util.stereotypes.Lazy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -34,21 +42,25 @@ public class TelaDetalhesDeVenda extends JFrame {
 	
 	private JPanel contentPane;
 
-	private JLabel lblValorVendido;
-	
-	private JLabel lblVendaNumero;
-	
-	private JLabel lblData;
-	
-	private JLabel lblStatus;
-	
-	private JLabel lblTipoPagamento;
 	
 	@Autowired
 	private ItemVendaService itemVendaService;
 	
 	private JTable tbItensVenda;
-
+	
+	private JLabel lblSetValorVendido;
+	
+	private JLabel lblSetTipoDePagamento;
+	
+	private JLabel lblSetData;
+	
+	private JLabel lblSetStatus;
+	
+	private JLabel lblSetNumeroVenda;
+	
+	@Autowired
+	@Lazy
+	private TelaConsultaDeVenda telaConsultaDeVenda;
 	
 	public void setVenda(Venda venda) {
 		Preconditions.checkNotNull(venda, "A venda é obrigatória ");
@@ -58,43 +70,83 @@ public class TelaDetalhesDeVenda extends JFrame {
 	}
 	
 	public TelaDetalhesDeVenda() {
+		setLocationRelativeTo(null);
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		setBounds(0, 0, 1366, 768);
+		setBounds(100, 100, 1366, 768);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 
 		setContentPane(contentPane);
-		contentPane.setLayout(null);
+		contentPane.setLayout(new BorderLayout(0, 10));
 		
-		JLabel lblValorVendidoLabel = new JLabel("Valor vendido:");
-		lblValorVendidoLabel.setFont(new Font("Dialog", Font.PLAIN, 20));
-		lblValorVendidoLabel.setBounds(12, 69, 156, 15);
-		contentPane.add(lblValorVendidoLabel);
+		JPanel panelSuperior = new JPanel();
+		panelSuperior.setBackground(SystemColor.activeCaption);
+		contentPane.add(panelSuperior, BorderLayout.NORTH);
+		panelSuperior.setLayout(new BorderLayout(0, 0));
 		
-		lblValorVendido = new JLabel("<dynamic>");
-		lblValorVendido.setFont(new Font("Dialog", Font.BOLD, 20));
-		lblValorVendido.setBounds(161, 64, 416, 24);
-		contentPane.add(lblValorVendido);
+		JPanel panel = new JPanel();
+		panel.setBackground(SystemColor.activeCaption);
+		panelSuperior.add(panel, BorderLayout.NORTH);
 		
-		JLabel lblDataVendaLabel = new JLabel("Data:");
-		lblDataVendaLabel.setFont(new Font("Dialog", Font.PLAIN, 20));
-		lblDataVendaLabel.setBounds(12, 127, 75, 24);
-		contentPane.add(lblDataVendaLabel);
+		JLabel lblDetalhes = new JLabel("Detalhes da venda n°");
+		panel.add(lblDetalhes);
+		lblDetalhes.setForeground(Color.WHITE);
+		lblDetalhes.setFont(new Font("Dialog", Font.PLAIN, 30));
+		lblDetalhes.setHorizontalAlignment(SwingConstants.CENTER);
 		
-		JLabel lblStatusLabel = new JLabel("Status:");
-		lblStatusLabel.setFont(new Font("Dialog", Font.PLAIN, 20));
-		lblStatusLabel.setBounds(12, 100, 93, 15);
-		contentPane.add(lblStatusLabel);
+		lblSetNumeroVenda = new JLabel("");
+		panel.add(lblSetNumeroVenda);
+		lblSetNumeroVenda.setForeground(Color.WHITE);
+		lblSetNumeroVenda.setFont(new Font("Dialog", Font.BOLD, 30));
 		
-		JLabel lblTipoDePagamentoLabel = new JLabel("Tipo de pagamento:");
-		lblTipoDePagamentoLabel.setFont(new Font("Dialog", Font.PLAIN, 20));
-		lblTipoDePagamentoLabel.setBounds(12, 163, 225, 22);
-		contentPane.add(lblTipoDePagamentoLabel);
+		JPanel panelInfos = new JPanel();
+		panelSuperior.add(panelInfos, BorderLayout.SOUTH);
+		panelInfos.setLayout(new GridLayout(0, 2, 0, 10));
 		
-		JLabel lblItensVendidos = new JLabel("Itens vendidos:");
-		lblItensVendidos.setFont(new Font("Dialog", Font.PLAIN, 20));
-		lblItensVendidos.setBounds(12, 228, 205, 30);
-		contentPane.add(lblItensVendidos);
+		JLabel lblSpacing = new JLabel("");
+		panelInfos.add(lblSpacing);
+		
+		JLabel lblSpacing1 = new JLabel("");
+		panelInfos.add(lblSpacing1);
+		
+		JLabel lblValorVendido = new JLabel("Valor vendido:");
+		lblValorVendido.setFont(new Font("Dialog", Font.PLAIN, 20));
+		panelInfos.add(lblValorVendido);
+		
+		lblSetValorVendido = new JLabel("");
+		lblSetValorVendido.setFont(new Font("Dialog", Font.BOLD, 20));
+		panelInfos.add(lblSetValorVendido);
+		
+		JLabel lblStatus = new JLabel("Status:");
+		lblStatus.setFont(new Font("Dialog", Font.PLAIN, 20));
+		panelInfos.add(lblStatus);
+		
+		lblSetStatus = new JLabel("");
+		lblSetStatus.setFont(new Font("Dialog", Font.BOLD, 20));
+		panelInfos.add(lblSetStatus);
+		
+		JLabel lblData = new JLabel("Data:");
+		lblData.setFont(new Font("Dialog", Font.PLAIN, 20));
+		panelInfos.add(lblData);
+		
+		lblSetData = new JLabel("");
+		lblSetData.setFont(new Font("Dialog", Font.BOLD, 20));
+		panelInfos.add(lblSetData);
+		
+		JLabel lblTipoDePagamento = new JLabel("Tipo de pagamento:");
+		lblTipoDePagamento.setFont(new Font("Dialog", Font.PLAIN, 20));
+		panelInfos.add(lblTipoDePagamento);
+		
+		lblSetTipoDePagamento = new JLabel("");
+		lblSetTipoDePagamento.setFont(new Font("Dialog", Font.BOLD, 20));
+		panelInfos.add(lblSetTipoDePagamento);
+		
+		JLabel lblSpacing2 = new JLabel("");
+		panelInfos.add(lblSpacing2);
+		
+		JPanel panelMeio = new JPanel();
+		panelMeio.setBorder(new TitledBorder(new LineBorder(new Color(255, 255, 255)), "Itens vendidos", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(51, 51, 51)));
+		contentPane.add(panelMeio, BorderLayout.CENTER);
 		
 		tbItensVenda = new JTable();
 		JScrollPane scrollPane = new JScrollPane(tbItensVenda);
@@ -104,46 +156,23 @@ public class TelaDetalhesDeVenda extends JFrame {
 		DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
 		centerRenderer.setHorizontalAlignment(JLabel.CENTER);
 		tbItensVenda.setDefaultRenderer(Object.class, centerRenderer);
+		panelMeio.setLayout(new BorderLayout(0, 0));
 		scrollPane.setBounds(12, 270, 1332, 385);
-		contentPane.add(scrollPane);
+		panelMeio.add(scrollPane);
+		
+		JPanel panelInferior = new JPanel();
+		contentPane.add(panelInferior, BorderLayout.SOUTH);
+		panelInferior.setLayout(new BorderLayout(0, 0));
 		
 		JButton btnVoltar = new JButton("Voltar");
-		btnVoltar.setBounds(1227, 681, 117, 38);
-		contentPane.add(btnVoltar);
-		
-		JPanel panel = new JPanel();
-		panel.setBackground(SystemColor.activeCaption);
-		panel.setBounds(0, -2, 1367, 59);
-		contentPane.add(panel);
-		panel.setLayout(null);
-		
-		JLabel lblTitle = new JLabel("Venda n°");
-		lblTitle.setFont(new Font("Dialog", Font.BOLD, 30));
-		lblTitle.setBounds(598, 10, 167, 35);
-		lblTitle.setForeground(new Color(255, 255, 255));
-		panel.add(lblTitle);
-		
-		lblVendaNumero = new JLabel("<dynamic>");
-		lblVendaNumero.setFont(new Font("Dialog", Font.BOLD, 30));
-		lblVendaNumero.setForeground(new Color(255, 255, 255));
-		lblVendaNumero.setBounds(760, 12, 228, 30);
-		panel.add(lblVendaNumero);
-		
-		lblData = new JLabel("<dynamic>");
-		lblData.setFont(new Font("Dialog", Font.BOLD, 20));
-		lblData.setBounds(68, 127, 449, 24);
-		contentPane.add(lblData);
-		
-		lblStatus = new JLabel("<dynamic>");
-		lblStatus.setFont(new Font("Dialog", Font.BOLD, 20));
-		lblStatus.setBounds(92, 96, 475, 24);
-		contentPane.add(lblStatus);
-		
-		lblTipoPagamento = new JLabel("<dynamic>");
-		lblTipoPagamento.setFont(new Font("Dialog", Font.BOLD, 20));
-		lblTipoPagamento.setBounds(218, 162, 325, 24);
-		contentPane.add(lblTipoPagamento);
-		setLocationRelativeTo(null);
+		btnVoltar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				telaConsultaDeVenda.abrirTela();
+				dispose();
+			}
+		});
+		btnVoltar.setFont(new Font("Dialog", Font.PLAIN, 20));
+		panelInferior.add(btnVoltar, BorderLayout.EAST);
 	}
 	
 	private void listarProdutosPela(Venda venda) {
@@ -153,11 +182,11 @@ public class TelaDetalhesDeVenda extends JFrame {
 	}
 	
 	private void setLabels(Venda venda) {
-		this.lblVendaNumero.setText(venda.getId().toString());
-		this.lblValorVendido.setText("R$ " + Conversor.numeroParaString(venda.getValorTotal()));
-		this.lblData.setText(Conversor.dataParaString(venda.getDataDeVenda()));
-		this.lblStatus.setText(venda.getStatus().toString());
-		this.lblTipoPagamento.setText(venda.getTipoDePagamento().toString());
+		this.lblSetNumeroVenda.setText(venda.getId().toString());
+		this.lblSetValorVendido.setText("R$ " + Conversor.numeroParaString(venda.getValorTotal()));
+		this.lblSetData.setText(Conversor.dataParaString(venda.getDataDeVenda()));
+		this.lblSetStatus.setText(venda.getStatus().toString());
+		this.lblSetTipoDePagamento.setText(venda.getTipoDePagamento().toString());
 	}
-	
+
 }

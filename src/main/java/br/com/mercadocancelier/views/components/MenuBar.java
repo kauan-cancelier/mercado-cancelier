@@ -13,7 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import br.com.mercadocancelier.views.fornecedor.TelaConsultaDeFornecedor;
-import br.com.mercadocancelier.views.produtos.TelaConsultaDeProdutos;
+import br.com.mercadocancelier.views.produtos.TelaConsultaProdutos;
 import br.com.mercadocancelier.views.vendas.TelaConsultaDeVenda;
 import br.com.mercadocancelier.views.vendas.TelaDeVenda;
 
@@ -24,7 +24,7 @@ public class MenuBar extends JMenuBar {
 
     @Autowired
     @Lazy
-    private TelaConsultaDeProdutos telaConsultaDeProdutos;
+    private TelaConsultaProdutos telaConsultaDeProdutos;
 
     @Autowired
     @Lazy

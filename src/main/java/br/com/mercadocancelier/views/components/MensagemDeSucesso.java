@@ -30,6 +30,7 @@ public class MensagemDeSucesso extends JDialog {
 	}
 
 	public MensagemDeSucesso() {
+		setModal(true);
 		setResizable(false);
 		setAlwaysOnTop(true);
 		setTitle("Aviso!!! ");

@@ -1,8 +1,11 @@
 package br.com.mercadocancelier.views.vendas;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.GridLayout;
+import java.awt.SystemColor;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.ParseException;
@@ -11,8 +14,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.swing.GroupLayout;
-import javax.swing.GroupLayout.Alignment;
 import javax.swing.JButton;
 import javax.swing.JFormattedTextField;
 import javax.swing.JFrame;
@@ -21,11 +22,9 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
-import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.ListSelectionModel;
+import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
-import javax.swing.border.LineBorder;
-import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.text.MaskFormatter;
 
@@ -37,8 +36,6 @@ import br.com.mercadocancelier.entity.Venda;
 import br.com.mercadocancelier.service.VendaService;
 import br.com.mercadocancelier.views.table.VendaTableModel;
 import jakarta.annotation.PostConstruct;
-import java.awt.SystemColor;
-
 
 @Component
 public class TelaConsultaDeVenda extends JFrame {
@@ -47,36 +44,149 @@ public class TelaConsultaDeVenda extends JFrame {
 
 	private JPanel contentPane;
 
+	private JFormattedTextField ftfDesde;
+
+	private JFormattedTextField ftfAte;
+
 	private JTable tbVendas;
-	
+
 	@Autowired
 	private VendaService vendaService;
-	
+
 	@Autowired
 	@Lazy
 	private TelaDetalhesDeVenda telaDetalhesDeVenda;
-	
+
 	@Autowired
 	@Lazy
 	private TelaDeVenda telaDeVenda;
-	
+
 	@PostConstruct
 	public void abrirTela() {
 		this.listarProdutos();
 	}
-	
+
 	public TelaConsultaDeVenda() {
-		setResizable(false);
+		setLocationRelativeTo(null);
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		setBounds(0, 0, 1366, 768);
+		setBounds(100, 100, 1366, 768);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 
 		setContentPane(contentPane);
-		
+		contentPane.setLayout(new BorderLayout(0, 20));
+
+		JPanel panelSuperior = new JPanel();
+		contentPane.add(panelSuperior, BorderLayout.NORTH);
+		panelSuperior.setLayout(new BorderLayout(0, 20));
+
+		JPanel panelCadastrar = new JPanel();
+		panelSuperior.add(panelCadastrar, BorderLayout.EAST);
+		panelCadastrar.setLayout(new BorderLayout(0, 0));
+
+		JButton btnNovaVenda = new JButton("Nova venda");
+		btnNovaVenda.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				telaDeVenda.setVisible(true);
+				dispose();
+			}
+		});
+		btnNovaVenda.setHorizontalAlignment(SwingConstants.RIGHT);
+		btnNovaVenda.setFont(new Font("Dialog", Font.PLAIN, 20));
+		panelCadastrar.add(btnNovaVenda, BorderLayout.NORTH);
+
+		JPanel panelFiltrar = new JPanel();
+		panelSuperior.add(panelFiltrar, BorderLayout.SOUTH);
+		panelFiltrar.setLayout(new BorderLayout(0, 0));
+
+		JPanel panelItens = new JPanel();
+		panelItens.setBorder(null);
+		panelFiltrar.add(panelItens, BorderLayout.NORTH);
+		panelItens.setLayout(new GridLayout(1, 1, 20, 0));
+
+		JPanel panelDesde = new JPanel();
+		panelItens.add(panelDesde);
+		panelDesde.setLayout(new BorderLayout(10, 0));
+
+		MaskFormatter dateFormatter = null;
+		try {
+			dateFormatter = new MaskFormatter("##/##/#### ##:##");
+			dateFormatter.setPlaceholderCharacter('_');
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+
+		ftfDesde = new JFormattedTextField(dateFormatter);
+		panelDesde.add(ftfDesde);
+		ftfDesde.setToolTipText("");
+		ftfDesde.setColumns(10);
+
+		JLabel lblDesde = new JLabel("Desde");
+		panelDesde.add(lblDesde, BorderLayout.WEST);
+
+		JPanel panelAte = new JPanel();
+		panelItens.add(panelAte);
+		panelAte.setLayout(new BorderLayout(10, 0));
+
+		JLabel lblAte = new JLabel("Ate");
+		panelAte.add(lblAte, BorderLayout.WEST);
+
+		ftfAte = new JFormattedTextField(dateFormatter);
+		panelAte.add(ftfAte, BorderLayout.CENTER);
+		ftfAte.setColumns(10);
+
+		JPanel panelButtonFiltrar = new JPanel();
+		panelItens.add(panelButtonFiltrar);
+		panelButtonFiltrar.setLayout(new BorderLayout(0, 0));
+
+		JButton btnFiltrar = new JButton("Filtrar");
+		btnFiltrar.setHorizontalAlignment(SwingConstants.RIGHT);
+		btnFiltrar.setFont(new Font("Dialog", Font.PLAIN, 20));
+		btnFiltrar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				String desdeText = ftfDesde.getText();
+				String ateText = ftfAte.getText();
+				DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
+				LocalDateTime desde;
+				LocalDateTime ate;
+
+				if (desdeText.contains("_")) {
+					desde = LocalDateTime.now().minusDays(30);
+					String desdeTextFormatted = desde.format(formatter);
+					ftfDesde.setText(desdeTextFormatted);
+				} else {
+					desde = LocalDateTime.parse(desdeText, formatter);					
+				}
+				
+				
+				if (ateText.contains("_")) {
+					ate = LocalDateTime.now();
+					String ateTextFormatted = ate.format(formatter);
+					ftfAte.setText(ateTextFormatted);
+				} else {
+					ate = LocalDateTime.parse(ateText, formatter);
+				}
+
+				listarProdutos(desde, ate);
+			}
+		});
+		panelButtonFiltrar.add(btnFiltrar, BorderLayout.EAST);
+
 		JPanel panel = new JPanel();
 		panel.setBackground(SystemColor.activeCaption);
-		
+		panelSuperior.add(panel, BorderLayout.NORTH);
+		panel.setLayout(new BorderLayout(0, 0));
+
+		JLabel lblNewLabel = new JLabel("Consulta de vendas");
+		lblNewLabel.setFont(new Font("Dialog", Font.PLAIN, 30));
+		lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
+		lblNewLabel.setForeground(Color.WHITE);
+		panel.add(lblNewLabel, BorderLayout.NORTH);
+
+		JPanel panelMeio = new JPanel();
+		contentPane.add(panelMeio, BorderLayout.CENTER);
+		panelMeio.setLayout(new BorderLayout(0, 0));
+
 		tbVendas = new JTable();
 		JScrollPane scrollPane = new JScrollPane(tbVendas);
 		tbVendas.getTableHeader().setPreferredSize(new Dimension(tbVendas.getTableHeader().getWidth(), 50));
@@ -84,11 +194,21 @@ public class TelaConsultaDeVenda extends JFrame {
 		DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
 		centerRenderer.setHorizontalAlignment(JLabel.CENTER);
 		tbVendas.setDefaultRenderer(Object.class, centerRenderer);
-		
-		JButton btnExcluir = new JButton("Excluir");
-		
+		panelMeio.add(scrollPane, BorderLayout.CENTER);
+
+		JPanel panelAcoes = new JPanel();
+		contentPane.add(panelAcoes, BorderLayout.SOUTH);
+		panelAcoes.setLayout(new BorderLayout(0, 50));
+
+		JPanel panelBotoes = new JPanel();
+		panelAcoes.add(panelBotoes, BorderLayout.EAST);
+		panelBotoes.setLayout(new GridLayout(1, 1, 20, 0));
+
 		JButton btnDetalhes = new JButton("Detalhes");
+		btnDetalhes.setBackground(new Color(238, 238, 238));
+		btnDetalhes.setFont(new Font("Dialog", Font.PLAIN, 20));
 		btnDetalhes.addActionListener(new ActionListener() {
+
 			public void actionPerformed(ActionEvent arg0) {
 				int linhaSelecionada = tbVendas.getSelectedRow();
 				if (linhaSelecionada != -1) {
@@ -100,136 +220,20 @@ public class TelaConsultaDeVenda extends JFrame {
 							JOptionPane.WARNING_MESSAGE);
 				}
 			}
+
 		});
-		
-		JButton btnNovaVenda = new JButton("Nova venda");
-		btnNovaVenda.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				telaDeVenda.setVisible(true);
-				dispose();
-			}
-		});
-		
-		JPanel panelFiltro = new JPanel();
-		panelFiltro.setBorder(new TitledBorder(new LineBorder(new Color(0, 0, 0)), "Filtros", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(51, 51, 51)));
-		GroupLayout gl_contentPane = new GroupLayout(contentPane);
-		gl_contentPane.setHorizontalGroup(
-			gl_contentPane.createParallelGroup(Alignment.TRAILING)
-				.addComponent(panel, GroupLayout.DEFAULT_SIZE, 1356, Short.MAX_VALUE)
-				.addGroup(gl_contentPane.createSequentialGroup()
-					.addContainerGap(1102, Short.MAX_VALUE)
-					.addComponent(btnDetalhes, GroupLayout.PREFERRED_SIZE, 118, GroupLayout.PREFERRED_SIZE)
-					.addGap(18)
-					.addComponent(btnExcluir, GroupLayout.PREFERRED_SIZE, 118, GroupLayout.PREFERRED_SIZE))
-				.addComponent(scrollPane, GroupLayout.DEFAULT_SIZE, 1356, Short.MAX_VALUE)
-				.addGroup(Alignment.LEADING, gl_contentPane.createSequentialGroup()
-					.addComponent(panelFiltro, GroupLayout.PREFERRED_SIZE, 863, GroupLayout.PREFERRED_SIZE)
-					.addPreferredGap(ComponentPlacement.RELATED, 375, Short.MAX_VALUE)
-					.addComponent(btnNovaVenda, GroupLayout.PREFERRED_SIZE, 118, GroupLayout.PREFERRED_SIZE))
-		);
-		gl_contentPane.setVerticalGroup(
-			gl_contentPane.createParallelGroup(Alignment.LEADING)
-				.addGroup(gl_contentPane.createSequentialGroup()
-					.addComponent(panel, GroupLayout.PREFERRED_SIZE, 79, GroupLayout.PREFERRED_SIZE)
-					.addGap(18)
-					.addGroup(gl_contentPane.createParallelGroup(Alignment.TRAILING)
-						.addComponent(panelFiltro, GroupLayout.PREFERRED_SIZE, 69, GroupLayout.PREFERRED_SIZE)
-						.addComponent(btnNovaVenda, GroupLayout.PREFERRED_SIZE, 45, GroupLayout.PREFERRED_SIZE))
-					.addPreferredGap(ComponentPlacement.UNRELATED)
-					.addComponent(scrollPane, GroupLayout.PREFERRED_SIZE, 475, GroupLayout.PREFERRED_SIZE)
-					.addPreferredGap(ComponentPlacement.RELATED, 29, Short.MAX_VALUE)
-					.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
-						.addComponent(btnExcluir, GroupLayout.PREFERRED_SIZE, 45, GroupLayout.PREFERRED_SIZE)
-						.addComponent(btnDetalhes, GroupLayout.PREFERRED_SIZE, 45, GroupLayout.PREFERRED_SIZE))
-					.addContainerGap())
-		);
-		
-		MaskFormatter dateFormatter = null;
-		try {
-			dateFormatter = new MaskFormatter("##/##/#### ##:##");
-		    dateFormatter.setPlaceholderCharacter('_');
-		} catch (ParseException e) {
-		    e.printStackTrace();
-		}
-		JLabel lblDesde = new JLabel("Desde");
-		
-		JFormattedTextField ftfDesde = new JFormattedTextField(dateFormatter);
-		
-		JLabel lblAt = new JLabel("Até");
-		
-		JFormattedTextField ftfAte = new JFormattedTextField(dateFormatter);
-		
-		JButton btnFiltrar = new JButton("Filtrar");
-		btnFiltrar.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
-				LocalDateTime desde = LocalDateTime.parse(ftfDesde.getText(), formatter);
-				LocalDateTime ate = LocalDateTime.parse(ftfAte.getText(), formatter);
-				listarProdutos(desde, ate);
-				
-			}
-		});
-		GroupLayout gl_panelFiltro = new GroupLayout(panelFiltro);
-		gl_panelFiltro.setHorizontalGroup(
-			gl_panelFiltro.createParallelGroup(Alignment.LEADING)
-				.addGroup(gl_panelFiltro.createSequentialGroup()
-					.addGap(18)
-					.addComponent(lblDesde)
-					.addPreferredGap(ComponentPlacement.RELATED)
-					.addComponent(ftfDesde, GroupLayout.PREFERRED_SIZE, 290, GroupLayout.PREFERRED_SIZE)
-					.addGap(28)
-					.addComponent(lblAt, GroupLayout.PREFERRED_SIZE, 39, GroupLayout.PREFERRED_SIZE)
-					.addPreferredGap(ComponentPlacement.RELATED)
-					.addComponent(ftfAte, GroupLayout.PREFERRED_SIZE, 290, GroupLayout.PREFERRED_SIZE)
-					.addPreferredGap(ComponentPlacement.UNRELATED)
-					.addComponent(btnFiltrar)
-					.addContainerGap(16, Short.MAX_VALUE))
-		);
-		gl_panelFiltro.setVerticalGroup(
-			gl_panelFiltro.createParallelGroup(Alignment.LEADING)
-				.addGroup(gl_panelFiltro.createSequentialGroup()
-					.addContainerGap()
-					.addGroup(gl_panelFiltro.createParallelGroup(Alignment.BASELINE)
-						.addComponent(ftfDesde, GroupLayout.PREFERRED_SIZE, 23, GroupLayout.PREFERRED_SIZE)
-						.addComponent(lblDesde)
-						.addComponent(lblAt)
-						.addComponent(ftfAte, GroupLayout.PREFERRED_SIZE, 23, GroupLayout.PREFERRED_SIZE)
-						.addComponent(btnFiltrar))
-					.addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-		);
-		panelFiltro.setLayout(gl_panelFiltro);
-		
-		JLabel lblConsultaDeVendas = new JLabel("Consulta de vendas");
-		lblConsultaDeVendas.setForeground(Color.WHITE);
-		lblConsultaDeVendas.setFont(new Font("Dialog", Font.BOLD, 40));
-		GroupLayout gl_panel = new GroupLayout(panel);
-		gl_panel.setHorizontalGroup(
-			gl_panel.createParallelGroup(Alignment.LEADING)
-				.addGroup(Alignment.TRAILING, gl_panel.createSequentialGroup()
-					.addContainerGap(460, Short.MAX_VALUE)
-					.addComponent(lblConsultaDeVendas)
-					.addGap(445))
-		);
-		gl_panel.setVerticalGroup(
-			gl_panel.createParallelGroup(Alignment.LEADING)
-				.addGroup(gl_panel.createSequentialGroup()
-					.addContainerGap()
-					.addComponent(lblConsultaDeVendas)
-					.addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-		);
-		panel.setLayout(gl_panel);
-		contentPane.setLayout(gl_contentPane);
-		setLocationRelativeTo(null);
+		panelBotoes.add(btnDetalhes);
 	}
-	
+
 	private void listarProdutos() {
 		List<Venda> vendas = new ArrayList<>();
 		vendas.addAll(vendaService.listarTodas());
 		VendaTableModel model = new VendaTableModel(vendas);
 		tbVendas.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		tbVendas.setModel(model);
+		tbVendas.updateUI();
 	}
-	
+
 	private void listarProdutos(LocalDateTime desde, LocalDateTime ate) {
 		List<Venda> vendas = new ArrayList<>();
 		vendas.addAll(vendaService.listar(desde, ate));
